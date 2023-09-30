@@ -13,9 +13,9 @@ export default function Home() {
     signOut(auth);
   };
   const router = useRouter();
-  if (!user) return router.push("/auth");
+  if (!user) return null;
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className=" flex min-h-screen flex-col items-center justify-between p-24">
       <div>
         <p>Current User: {user.email}</p>
         <button onClick={logout}>Log out</button>

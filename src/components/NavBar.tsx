@@ -14,6 +14,7 @@ import RoofingIcon from "@mui/icons-material/Roofing";
 import { getAuth, signOut } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { app } from "@/constants/firebase";
+import { useRouter } from "next/navigation";
 export function NavBar() {
   return (
     <>
@@ -73,14 +74,15 @@ function UserData() {
   );
 }
 function NavGroup() {
+  const router =useRouter()
   return (
     <Box className="border-b-2 border-solid mx-1 xl:mx-5 flex flex-col justify-center place-items-center md:place-items-stretch">
       <List className="m-1 lg:m-2 p-0">
-        {["Dashboard", "Tasks", "Reports", "Account Settings", "Help"].map(
+        { Navlinks.map(
           (route) => (
-            <ListItem key={route}>
+            <ListItem key={route.name} onClick={()=> router.push (route.link)}>
               <ListItemButton className="p-1 flex justify-center place-items-center">
-                <ListItemText primary={route} />
+                <ListItemText primary={route.name} />
               </ListItemButton>
             </ListItem>
           )
@@ -89,3 +91,4 @@ function NavGroup() {
     </Box>
   );
 }
+ const Navlinks = [{name:'Dashboard',link:'/'}, {name:'Tasks',link:'/tasks'}, {name:'Reports',link:'/report'}, {name:'Account Settings',link:'/account-settings'}, {name:'Help',link:'/'} ]

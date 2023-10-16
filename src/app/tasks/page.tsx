@@ -1,11 +1,24 @@
 "use client";
 import TaskPanel from "@/components/Accordion";
-import { useJobs } from "@/hooks";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Typography } from "@mui/material";
+import { useGetTasksforWeeks, useJobs } from "@/hooks";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React, { useState } from "react";
 
 export default function Page() {
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false); //manages open status of create task dialog
+  const { Task } = useJobs();
+  const { error, loading, tasks } = useGetTasksforWeeks();
+  if (loading) return <div>Loading</div>;
+  if (!tasks) return <div>Sorry something went wrong, No Task</div>;
   return (
     <>
       <main className="py-4 px-6 flex flex-col justify-center items-start gap-4 ">
@@ -27,8 +40,8 @@ export default function Page() {
         </div>
         <div className="flex gap-4 justify-items-center justify-normal w-full">
           <div className=" basis-3/4">
-            {[1, 2, 3, 4].map((number) => {
-              return <TaskPanel key={number} />;
+            {tasks.docs.map((number: any) => {
+              return <TaskPanel key={number.id} />;
             })}
             <TaskPanel />
           </div>
@@ -47,17 +60,17 @@ export default function Page() {
 function CreateTask({ open, close }: { open: boolean; close: () => void }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const {Task}= useJobs()
-  const createTask =()=>{
-    console.log(title, description)
+  const { Task } = useJobs();
+
+  const createTask = () => {
+    console.log(title, description);
     if (!title && !description) {
-      return
+      return;
     }
-    Task.create(title,description)
-  }
+    Task.create(title, description);
+  };
   return (
     <Dialog onClose={close} open={open}>
-     
       <DialogTitle>Create Task</DialogTitle>
       <DialogContent>
         <DialogContentText>
@@ -71,7 +84,10 @@ function CreateTask({ open, close }: { open: boolean; close: () => void }) {
           type="text"
           fullWidth
           variant="standard"
-          value={title} onChange ={(event)=>{setTitle(event.target.value)}}
+          value={title}
+          onChange={(event) => {
+            setTitle(event.target.value);
+          }}
         />
         <TextField
           autoFocus
@@ -81,9 +97,11 @@ function CreateTask({ open, close }: { open: boolean; close: () => void }) {
           type="text"
           fullWidth
           variant="standard"
-          value={description} onChange ={(event)=>{setDescription(event.target.value)}}
+          value={description}
+          onChange={(event) => {
+            setDescription(event.target.value);
+          }}
         />
-       
       </DialogContent>
       <DialogActions>
         <Button onClick={close}>Cancel</Button>

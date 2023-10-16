@@ -1,17 +1,34 @@
+import { Firestore, addDoc, collection, getDocs, query } from "firebase/firestore";
+
 export class Job {
   public description?: string;
   public deadline?: Date;
   public status?: JobStatus;
+  private store: Firestore;
 
-  constructor(description?: string, deadline?: Date, status?: JobStatus) {
+  constructor(
+    store: Firestore,
+    description?: string,
+    deadline?: Date,
+    status?: JobStatus
+  ) {
     this.description = description;
     this.deadline = deadline;
     this.status = status;
+    this.store = store;
   }
-  create(title:string, description:string) {
-
+  async create(title: string, description: string) {
+    return await addDoc(collection(this.store, "tasks"), {
+      title,
+      description,
+    });
   }
   updateJob() {}
   deleteJob() {}
   getJobByStatus(jobStatus: JobStatus) {}
+ getTasksForWeeks() {
+    const tasks= query(collection(this.store, "tasks")) 
+      return (tasks)
+    
+  }
 }

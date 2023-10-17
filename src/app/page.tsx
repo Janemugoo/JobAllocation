@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Alert from "@mui/material/Alert";
 import Image from "next/image";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
@@ -13,9 +13,36 @@ export default function Home() {
   const logout = () => {
     signOut(auth);
   };
-  const router = useRouter();
-  if (!user) return null;
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
   return (
-    <div>Welcome to the Dashboard </div>
+    <div className="p-4">
+      <h1 >Welcome to the Dashboard</h1>
+      
+        <div className="flex justify-evenly p-4">
+          <div className="w-1/4 border p-4">
+            <h2 className="text-xl font-semibold mb-4">TO DO</h2>
+            {/* I'll add TO DO tasks here */}
+          </div>
+          <div className="w-1/4 border p-4">
+            <h2 className="text-xl font-semibold mb-4">IN PROGRESS</h2>
+            {/* I'll add IN PROGRESS tasks here */}
+          </div>
+          <div className="w-1/4 border p-4">
+            <h2 className="text-xl font-semibold mb-4">IN REVIEW</h2>
+            {/* I'll add IN REVIEW tasks here */}
+          </div>
+          <div className="w-1/4 border p-4">
+            <h2 className="text-xl font-semibold mb-4">COMPLETED</h2>
+            {/* I'll add COMPLETED tasks here */}
+          </div>
+        </div>
+      </div>
+   
   );
 }

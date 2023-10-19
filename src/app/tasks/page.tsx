@@ -9,6 +9,8 @@ import {
   DialogContentText,
   DialogTitle,
   TextField,
+  Select,
+  MenuItem,
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
@@ -61,13 +63,17 @@ function CreateTask({ open, close }: { open: boolean; close: () => void }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const { Task } = useJobs();
-
+  const [selectedName, setSelectedName] = useState("");
+  const names = ["Jane", "Mark", "Wesley", "Sheila"]; //some sample names for the dropdown
   const createTask = () => {
     console.log(title, description);
     if (!title && !description) {
       return;
     }
     Task.create(title, description);
+    setTitle("");
+    setDescription("");
+    setSelectedName("");
   };
   return (
     <Dialog onClose={close} open={open}>
@@ -102,6 +108,24 @@ function CreateTask({ open, close }: { open: boolean; close: () => void }) {
             setDescription(event.target.value);
           }}
         />
+        <Select
+          autoFocus
+          margin="dense"
+          id="name"
+          label="Select Employee"
+          type="select"
+          fullWidth
+          variant="standard"
+          value={selectedName}
+          onChange={(event) => setSelectedName(event.target.value)}
+         
+        >
+          {names.map((name) => (
+            <MenuItem key={name} value={name}>
+              {name}
+            </MenuItem>
+          ))}
+        </Select>
       </DialogContent>
       <DialogActions>
         <Button onClick={close}>Cancel</Button>

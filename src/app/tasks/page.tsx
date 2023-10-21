@@ -118,7 +118,6 @@ function CreateTask({ open, close }: { open: boolean; close: () => void }) {
           variant="standard"
           value={selectedName}
           onChange={(event) => setSelectedName(event.target.value)}
-         
         >
           {names.map((name) => (
             <MenuItem key={name} value={name}>

@@ -15,6 +15,9 @@ module.exports = {
         textColor: { DEFAULT: "#000003" },
         secondary: { DEFAULT: "#6E6189" },
         borderColor: { DEFAULT: "#9C90AA", secondary: "#CBC9CC" },
+        background: {
+          DEFAULT: "#e9e9ed"
+        }
       },
     },
   },

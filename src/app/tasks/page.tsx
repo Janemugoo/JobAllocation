@@ -19,8 +19,12 @@ export default function Page() {
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false); //manages open status of create task dialog
   const { Task } = useJobs();
   const { error, loading, tasks } = useGetTasksforWeeks();
+
+
   if (loading) return <div>Loading</div>;
   if (!tasks) return <div>Sorry something went wrong, No Task</div>;
+
+
   return (
     <>
       <main className="py-4 px-6 flex flex-col justify-center items-start gap-4 ">
@@ -30,6 +34,7 @@ export default function Page() {
           </div>
           <div>
             <Button
+              color="primary"
               variant="outlined"
               onClick={() => {
                 setCreateTaskDialogOpen(true);
@@ -59,12 +64,17 @@ export default function Page() {
     </>
   );
 }
+
+
+
 function CreateTask({ open, close }: { open: boolean; close: () => void }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const { Task } = useJobs();
   const [selectedName, setSelectedName] = useState("");
   const names = ["Jane", "Mark", "Wesley", "Sheila"]; //some sample names for the dropdown
+
+
   const createTask = () => {
     console.log(title, description);
     if (!title && !description) {
@@ -75,6 +85,9 @@ function CreateTask({ open, close }: { open: boolean; close: () => void }) {
     setDescription("");
     setSelectedName("");
   };
+
+
+
   return (
     <Dialog onClose={close} open={open}>
       <DialogTitle>Create Task</DialogTitle>

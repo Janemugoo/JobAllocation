@@ -3,18 +3,7 @@ import "./globals.css";
 import "../constants/firebase";
 import { Guard } from "@/components/Gaurd";
 import { ThemeProvider } from "@mui/material";
-import { createTheme } from "@mui/material/styles";
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#211E46",
-      light: "#211E46",
-    },
-    secondary: {
-      main: "#6E6189",
-    },
-  },
-});
+import { theme } from "@/constants/theme";
 export default function RootLayout({
   children,
 }: {

@@ -1,4 +1,5 @@
-"use client";
+"use client"
+
 import TaskPanel from "@/components/Accordion";
 import { useGetTasksforWeeks, useJobs } from "@/hooks";
 import {

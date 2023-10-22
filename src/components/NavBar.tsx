@@ -15,7 +15,11 @@ import { getAuth, signOut } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { app } from "@/constants/firebase";
 import { useRouter } from "next/navigation";
+
+
 export function NavBar() {
+
+
   return (
     <>
       <Box className="h-full rounded-sm text-xs md:text-md border-transparent transition-shadow shadow-lg flex flex-col justify-between z-50 overflow-hidden">
@@ -41,9 +45,12 @@ export function NavBar() {
     </>
   );
 }
+
+
 function UserData() {
   const auth = getAuth(app);
-  const [user, loading, error] = useAuthState(auth);
+  const [user] = useAuthState(auth);
+
   const logout = () => {
     signOut(auth);
   };
@@ -58,6 +65,7 @@ function UserData() {
           <Typography variant="caption">{user.email}</Typography>
         </Box>
       </Box>
+
       <Button
         onClick={logout}
         size="small"
@@ -74,8 +82,11 @@ function UserData() {
     </>
   );
 }
+
+
 function NavGroup() {
-  const router =useRouter()
+  const router =useRouter();
+
   return (
     <Box className="border-b-2 border-solid mx-1 xl:mx-5 flex flex-col justify-center place-items-center md:place-items-stretch">
       <List className="m-1 lg:m-2 p-0">

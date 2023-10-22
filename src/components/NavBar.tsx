@@ -49,6 +49,7 @@ function UserData() {
   };
 
   if (!user) return null;
+  
   return (
     <>
       <Box className="m-2 flex justify-center place-content-center md:place-items-stretch">

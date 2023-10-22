@@ -1,18 +1,21 @@
 'use client';
 
+import { app } from '@/constants/firebase';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import SearchIcon from '@mui/icons-material/Search';
 import { Badge, IconButton, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
+import { getAuth } from 'firebase/auth';
 import React, { ReactNode } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import  {NavBar} from './NavBar';
 
 export function AppLayout({ children }: { children: ReactNode }) {
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+  const auth = getAuth(app);
+  const [user] = useAuthState(auth);
+
+  if(!user) return null
 
   return (
     <Box className="flex flex-row w-full h-full overflow-clip">

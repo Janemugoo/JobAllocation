@@ -9,6 +9,7 @@ import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
@@ -28,20 +29,21 @@ export default function SignUp() {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
   } = useForm<SignUpForm>({resolver:yupResolver(schema)}); //Form type is SignUpForm
   const auth = getAuth(app);
   const [
     createUserWithEmailAndPassword,
-    user,
-    loading,
-    error,
-  ] = useCreateUserWithEmailAndPassword(auth); //custom hook 
-  const onSubmit: SubmitHandler<SignUpForm> = (data) => {
+  ] = useCreateUserWithEmailAndPassword(auth);
+  const router = useRouter()
+  
+  //custom hook 
+  const onSubmit: SubmitHandler<SignUpForm> = async (data) => {
     const { email, password } = data;
-    createUserWithEmailAndPassword(email, password);
+    await createUserWithEmailAndPassword(email, password);
+    router.push('/')
   };
-console.log(errors)
+
+
   return (
     <section className="bg-gray-50 ">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">

@@ -21,6 +21,7 @@ export class Job {
     return await addDoc(collection(this.store, "tasks"), {
       title,
       description,
+      
     });
   }
   updateJob() {}

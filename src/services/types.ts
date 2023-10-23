@@ -1,9 +1,9 @@
 interface EmployeeOptions{
-     firstName: string
-     lastName: string
-     email: string 
-     position: string
-     hiredDate: Date
+     firstName?: string
+     lastName?: string
+     email?: string 
+     position?: string
+     hiredDate?: Date
 
      createEmployee:()=> void
      updateEmployeedetail:()=> void

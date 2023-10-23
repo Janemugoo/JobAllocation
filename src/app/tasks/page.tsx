@@ -1,5 +1,4 @@
-"use client"
-
+"use client";
 import TaskPanel from "@/components/Accordion";
 import { useGetTasksforWeeks, useJobs } from "@/hooks";
 import {
@@ -10,8 +9,7 @@ import {
   DialogContentText,
   DialogTitle,
   TextField,
-  Select,
-  MenuItem,
+  Autocomplete,
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
@@ -20,12 +18,8 @@ export default function Page() {
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false); //manages open status of create task dialog
   const { Task } = useJobs();
   const { error, loading, tasks } = useGetTasksforWeeks();
-
-
-  if (loading) return <div>Loading</div>;
+  if (loading) return <div>Loading...</div>;
   if (!tasks) return <div>Sorry something went wrong, No Task</div>;
-
-
   return (
     <>
       <main className="py-4 px-6 flex flex-col justify-center items-start gap-4 ">
@@ -35,7 +29,6 @@ export default function Page() {
           </div>
           <div>
             <Button
-              color="primary"
               variant="outlined"
               onClick={() => {
                 setCreateTaskDialogOpen(true);
@@ -65,20 +58,15 @@ export default function Page() {
     </>
   );
 }
-
-
-
 function CreateTask({ open, close }: { open: boolean; close: () => void }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const { Task } = useJobs();
   const [selectedName, setSelectedName] = useState("");
   const names = ["Jane", "Mark", "Wesley", "Sheila"]; //some sample names for the dropdown
-
-
   const createTask = () => {
     console.log(title, description);
-    if (!title && !description) {
+    if (!title && !description && !selectedName) {
       return;
     }
     Task.create(title, description);
@@ -86,9 +74,6 @@ function CreateTask({ open, close }: { open: boolean; close: () => void }) {
     setDescription("");
     setSelectedName("");
   };
-
-
-
   return (
     <Dialog onClose={close} open={open}>
       <DialogTitle>Create Task</DialogTitle>
@@ -122,23 +107,13 @@ function CreateTask({ open, close }: { open: boolean; close: () => void }) {
             setDescription(event.target.value);
           }}
         />
-        <Select
-          autoFocus
-          margin="dense"
-          id="name"
-          label="Select Employee"
-          type="select"
-          fullWidth
-          variant="standard"
-          value={selectedName}
-          onChange={(event) => setSelectedName(event.target.value)}
-        >
-          {names.map((name) => (
-            <MenuItem key={name} value={name}>
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
+        <Autocomplete
+          disablePortal
+          id="combo-box-demo"
+          options={[]}
+          sx={{ width: 300 }}
+          renderInput={(params) => <TextField {...params} label="Select Staff" />}
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={close}>Cancel</Button>

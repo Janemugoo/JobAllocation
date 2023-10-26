@@ -14,7 +14,7 @@ export class Staff extends Employee {
     
   }
   getAssignableStaff() {return query(collection(this.store, "staff")) }
-  create() {}
+  create(staffName:string, staffDepartment:string) {}
   updateInformation() {}
   delete(){}
   retrive(){}

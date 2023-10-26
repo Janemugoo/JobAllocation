@@ -5,11 +5,16 @@ import { useCollection } from "react-firebase-hooks/firestore";
 
 const store= initFirestore()
 export function useStaff (){
-return {}
+    const staff= useMemo(()=>new Staff(store),[])
+return {
+    Staff:staff
+}
 }
 
 export function useAssignableStaff(){
    const staff= useMemo(()=>new Staff(store),[])
    const [tasks, loading, error]= useCollection(staff.getAssignableStaff())
-    return {}
+    return {
+        
+    }
 }

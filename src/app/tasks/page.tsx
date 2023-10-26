@@ -63,7 +63,7 @@ function CreateTask({ open, close }: { open: boolean; close: () => void }) {
   const [description, setDescription] = useState("");
   const { Task } = useJobs();
   const [selectedName, setSelectedName] = useState("");
-  const names = ["Jane", "Mark", "Wesley", "Sheila"]; //some sample names for the dropdown
+  //const Autocomplete = ["Jane", "Mark", "Wesley", "Sheila"]; //some sample names for the dropdown
   const createTask = () => {
     console.log(title, description);
     if (!title && !description && !selectedName) {
@@ -111,7 +111,7 @@ function CreateTask({ open, close }: { open: boolean; close: () => void }) {
           disablePortal
           id="combo-box-demo"
           options={[]}
-          sx={{ width: 300 }}
+          sx={{ width: 500, length: 50}}
           renderInput={(params) => <TextField {...params} label="Select Staff" />}
         />
       </DialogContent>

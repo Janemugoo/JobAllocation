@@ -1,4 +1,5 @@
 import React from 'react'
+import loading from '../loading';
 
 export default function Page() {
   return (

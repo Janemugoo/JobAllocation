@@ -1,20 +1,24 @@
 import { initFirestore } from "@/constants/firebase";
-import { Staff} from "@/services";
+import { Staff } from "@/services";
 import { useMemo } from "react";
 import { useCollection } from "react-firebase-hooks/firestore";
 
-const store= initFirestore()
-export function useStaff (){
-    const staff= useMemo(()=>new Staff(store),[])
-return {
-    Staff:staff
-}
+const store = initFirestore();
+export function useStaff() {
+  const staff = useMemo(() => new Staff(store), []);
+  return {
+    Staff: staff,
+  };
 }
 
-export function useAssignableStaff(){
-   const staff= useMemo(()=>new Staff(store),[])
-   const [tasks, loading, error]= useCollection(staff.getAssignableStaff())
-    return {
-        
-    }
+export function useAssignableStaff() {
+  const staff = useMemo(() => new Staff(store), []);
+  const [tasks, loading, error] = useCollection(staff.getAssignableStaff());
+  return {};
+}
+
+export function useGetStaffs() {
+  const staff = useMemo(() => new Staff(store), []);
+  const [staffs, loading, error] = useCollection(staff.getStaffs());
+  return { staffs, loading, error };
 }

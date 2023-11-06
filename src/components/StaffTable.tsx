@@ -1,4 +1,4 @@
-import { useStaff } from "@/hooks";
+import { useGetStaffs, useStaff } from "@/hooks";
 import {
   Button,
   Dialog,
@@ -16,24 +16,32 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function StaffTable() {
   const [createStaffDialogOpen, setCreateStaffDialogOpen] = useState(false); //change to staff
-  const [rows, setRows] = useState([
-    { id: 1, name: "John Doe", department: "IT", managerId: "12345" },
-    { id: 2, name: "Jane Smith", department: "HR", managerId: "67890" },
-    // Add more rows if needed
-  ]);
+  const {staffs, loading } = useGetStaffs();
+  console.log(staffs?.docs);
+  const rows = useMemo(() => {
+    if (!staffs?.docs.length) return [];
 
-  const handleDeleteRow = (id: number) => {
-    setRows(rows.filter((row) => row.id !== id));
-  };
+    return staffs.docs.map((doc) => {
+      const staff = doc.data();
+      return {
+        id: staff.id,
+        staffDepartment: staff.staffDepartment,
+        staffName: staff.staffName,
+      };
+    });
+  }, [staffs]);
+  console.log(rows);
+
+  
+  
   return (
     <>
-      {" "}
-      <div>
+      <div className="w-full flex flex-col items-start gap-2">
         <Button
           variant="outlined"
           onClick={() => {
@@ -42,45 +50,48 @@ export default function StaffTable() {
         >
           New Staff
         </Button>
+
+        <TableContainer component={Paper} className="smaller-table">
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell align="right">Department</TableCell>
+                <TableCell align="right">Staff ID</TableCell>
+                <TableCell align="right">Actions</TableCell>{" "}
+                {/* Add Actions column */}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell component="th" scope="row">
+                    {row.staffName}
+                  </TableCell>
+                  <TableCell align="right">{row.staffDepartment}</TableCell>
+                  <TableCell align="right">{row.id}</TableCell>
+                  <TableCell align="right">
+                    <IconButton
+                      aria-label="delete"
+                      color="secondary"
+                      onClick={() => console.log(row.id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </div>
+
+      {/* Table component */}
+
       <CreateStaff
         open={createStaffDialogOpen}
         close={() => setCreateStaffDialogOpen(false)}
       />
-      {/* Table component */}
-      <TableContainer component={Paper} className="smaller-table">
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell align="right">Department</TableCell>
-              <TableCell align="right">Staff ID</TableCell>
-              <TableCell align="right">Actions</TableCell>{" "}
-              {/* Add Actions column */}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell component="th" scope="row">
-                  {row.name}
-                </TableCell>
-                <TableCell align="right">{row.department}</TableCell>
-                <TableCell align="right">{row.managerId}</TableCell>
-                <TableCell align="right">
-                  <IconButton
-                    aria-label="delete"
-                    color="secondary"
-                    onClick={() => handleDeleteRow(row.id)}
-                  >
-                    <DeleteIcon/>
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
     </>
   );
 }

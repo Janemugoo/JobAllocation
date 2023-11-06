@@ -17,11 +17,11 @@ export class Job {
     this.status = status;
     this.store = store;
   }
-  async create(title: string, description: string) {
+  async create(title: string, description: string, assigneeId: string) {
     return await addDoc(collection(this.store, "tasks"), {
       title,
       description,
-      
+      assigneeId,
     });
   }
   updateJob() {}

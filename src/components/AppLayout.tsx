@@ -28,7 +28,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
         <NavBar />
       </Box>
       <Box component="main" className="w-10/12 md:w-4/5 lg:w-10/12 overflow-auto">
-        <Box className="md:h-16 w-full sticky top-0 flex items-center px-4 py-2">
+        <Box className="md:h-16 w-full sticky shadow-sm z-10 bg-transparent bg-white top-0 flex items-center px-4 py-2">
           <Typography className="inline-flex ml-2 text-lg font-bold text-gray-900">
             Tasks
           </Typography>

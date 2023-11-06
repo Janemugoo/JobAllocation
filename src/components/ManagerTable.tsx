@@ -17,25 +17,30 @@ import {
   Card,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete"; // Material Icons delete icon
-import React, { useState } from "react";
-import { useManager } from "@/hooks";
+import React, { useMemo, useState } from "react";
+import { useGetManagers, useManager } from "@/hooks";
 
 export default function ManagerTable() {
   const [createManagerDialogOpen, setCreateManagerDialogOpen] = useState(false);
+  const { managers, loading } = useGetManagers();
+  console.log(managers?.docs);
+  const rows = useMemo(() => {
+    if (!managers?.docs.length) return [];
 
-  const [rows, setRows] = useState([
-    { id: 1, name: "John Doe", department: "IT", managerId: "12345" },
-    { id: 2, name: "Jane Smith", department: "HR", managerId: "67890" },
-    // Add more rows if needed
-  ]);
-
-  const handleDeleteRow = (id: number) => {
-    setRows(rows.filter((row) => row.id !== id));
-  };
+    return managers.docs.map((doc) => {
+      const manager = doc.data();
+      return {
+        id: manager.id,
+        managerDepartment: manager.managerDepartment,
+        managerName: manager.managerName,
+      };
+    });
+  }, [managers]);
+  console.log(rows);
 
   return (
-    <div>
-      <div className="fixed right-2">
+    <>
+      <div className="w-full flex flex-col items-start gap-2">
         <Button
           variant="outlined"
           onClick={() => {
@@ -44,47 +49,47 @@ export default function ManagerTable() {
         >
           New Manager
         </Button>
+
+        {/* Table component */}
+        <TableContainer component={Card} className="table-fixed">
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell align="right">Department</TableCell>
+                <TableCell align="right">Manager ID</TableCell>
+                <TableCell align="right">Actions</TableCell>{" "}
+                {/* Add Actions column */}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell component="th" scope="row">
+                    {row.managerName}
+                  </TableCell>
+                  <TableCell align="right">{row.managerDepartment}</TableCell>
+                  <TableCell align="right">{row.id}</TableCell>
+                  <TableCell align="right">
+                    <IconButton
+                      aria-label="delete"
+                      color="secondary"
+                      onClick={() => console.log(row.id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </div>
       <CreateManager
         open={createManagerDialogOpen}
         close={() => setCreateManagerDialogOpen(false)}
       />
-
-      {/* Table component */}
-      <TableContainer component={Card} className="table-fixed">
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell align="right">Department</TableCell>
-              <TableCell align="right">Manager ID</TableCell>
-              <TableCell align="right">Actions</TableCell>{" "}
-              {/* Add Actions column */}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell component="th" scope="row">
-                  {row.name}
-                </TableCell>
-                <TableCell align="right">{row.department}</TableCell>
-                <TableCell align="right">{row.managerId}</TableCell>
-                <TableCell align="right">
-                  <IconButton
-                    aria-label="delete"
-                    color="secondary"
-                    onClick={() => handleDeleteRow(row.id)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </div>
+    </>
   );
 }
 function CreateManager({ open, close }: { open: boolean; close: () => void }) {
@@ -92,7 +97,6 @@ function CreateManager({ open, close }: { open: boolean; close: () => void }) {
   const [managerDepartment, setManagerDepartment] = useState("");
   const { Manager } = useManager();
   const createManager = () => {
-    console.log(managerName, managerDepartment);
     if (!managerName && !managerDepartment) {
       return;
     }

@@ -19,8 +19,7 @@ export function useGetTasksforWeeks (){
 export function useJobs () {
     const store= initFirestore()
     const task= useMemo(()=>new Job(store),[])
-     
-    return{
-        Task:task
-    }
+    const [tasks]=useCollection(task.getJobs())
+    return{ tasks}
+          
 }

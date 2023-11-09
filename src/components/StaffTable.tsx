@@ -18,10 +18,11 @@ import {
 } from "@mui/material";
 import React, { useMemo, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit"; // Material-UI Edit icon
 
 export default function StaffTable() {
   const [createStaffDialogOpen, setCreateStaffDialogOpen] = useState(false); //change to staff
-  const {staffs, loading } = useGetStaffs();
+  const { staffs, loading } = useGetStaffs();
   console.log(staffs?.docs);
   const rows = useMemo(() => {
     if (!staffs?.docs.length) return [];
@@ -29,7 +30,7 @@ export default function StaffTable() {
     return staffs.docs.map((doc) => {
       const staff = doc.data();
       return {
-        id: staff.id,
+        id: staff.staffID,
         staffDepartment: staff.staffDepartment,
         staffName: staff.staffName,
       };
@@ -37,8 +38,6 @@ export default function StaffTable() {
   }, [staffs]);
   console.log(rows);
 
-  
-  
   return (
     <>
       <div className="w-full flex flex-col items-start gap-2">
@@ -71,6 +70,16 @@ export default function StaffTable() {
                   <TableCell align="right">{row.staffDepartment}</TableCell>
                   <TableCell align="right">{row.id}</TableCell>
                   <TableCell align="right">
+                  <IconButton
+                aria-label="edit"
+                color="primary"
+                onClick={() => {
+                 // setSelectedStaff(row);
+                  setCreateStaffDialogOpen(true);
+                }}
+              >
+                <EditIcon /> 
+                </IconButton>
                     <IconButton
                       aria-label="delete"
                       color="secondary"

@@ -17,26 +17,45 @@ import {
   Card,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete"; // Material Icons delete icon
-import React, { useMemo, useState } from "react";
+import EditIcon from "@mui/icons-material/Edit"; // Material-UI Edit icon
+
+import React, { useEffect, useMemo, useState } from "react";
 import { useGetManagers, useManager } from "@/hooks";
 
 export default function ManagerTable() {
+  const {
+    deleteManagerRow,
+    managerFields,
+    managerRowId,
+    setManagerFields,
+    setManagerRowId,
+    updateManagerRow,
+  } = useManager();
   const [createManagerDialogOpen, setCreateManagerDialogOpen] = useState(false);
+  const [editManagerData, setEditManagerData] = useState(null); // State to store data of manager being edited
   const { managers, loading } = useGetManagers();
-  console.log(managers?.docs);
+
   const rows = useMemo(() => {
     if (!managers?.docs.length) return [];
 
     return managers.docs.map((doc) => {
       const manager = doc.data();
       return {
-        id: manager.id,
+        id: manager.managerID,
         managerDepartment: manager.managerDepartment,
         managerName: manager.managerName,
       };
     });
   }, [managers]);
   console.log(rows);
+
+  function setSelectedManager(row: {
+    id: any;
+    managerDepartment: any;
+    managerName: any;
+  }) {
+    throw new Error("Function not implemented.");
+  }
 
   return (
     <>
@@ -72,9 +91,20 @@ export default function ManagerTable() {
                   <TableCell align="right">{row.id}</TableCell>
                   <TableCell align="right">
                     <IconButton
+                      aria-label="edit"
+                      color="primary"
+                      onClick={() => {
+                        setManagerFields ({managerDepartment:row.managerDepartment, managerName:row.managerName}),
+                        setManagerRowId(row.id); // Set data of manager being edited
+                        setCreateManagerDialogOpen(true);
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
                       aria-label="delete"
                       color="secondary"
-                      onClick={() => console.log(row.id)}
+                      onClick={() => deleteManagerRow(row.id)}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -87,15 +117,45 @@ export default function ManagerTable() {
       </div>
       <CreateManager
         open={createManagerDialogOpen}
-        close={() => setCreateManagerDialogOpen(false)}
+        isEditing={Boolean(managerRowId)}
+        managerID= {managerRowId}
+        close={() => {
+          setManagerFields({ managerName: "", managerDepartment: "" }); // Reset the editManagerData state when dialog is closed
+          setCreateManagerDialogOpen(false);
+        }}
+        initialData={managerFields} // Pass the data of manager being edited to the CreateManager component
       />
     </>
   );
 }
-function CreateManager({ open, close }: { open: boolean; close: () => void }) {
-  const [managerName, setManagerName] = useState("");
-  const [managerDepartment, setManagerDepartment] = useState("");
-  const { Manager } = useManager();
+function CreateManager({
+  open,
+  close,
+  initialData,
+}: {
+  open: boolean;
+  close: () => void;
+  initialData: any;
+  isEditing: boolean;
+  managerID:string | null
+}) {
+  const [managerName, setManagerName] = useState(
+    initialData ? initialData.managerName : ""
+  );
+  const [managerDepartment, setManagerDepartment] = useState(
+    initialData ? initialData.managerDepartment : ""
+  );
+  const { Manager, updateManagerRow } = useManager();
+
+  useEffect(() => {
+    //updates the form fields whenever initialData changes
+    if (initialData) {
+      setManagerName(initialData.managerName);
+      setManagerDepartment(initialData.managerDepartment);
+    }
+  }, [initialData]);
+const updateManager = ()=>{}
+
   const createManager = () => {
     if (!managerName && !managerDepartment) {
       return;

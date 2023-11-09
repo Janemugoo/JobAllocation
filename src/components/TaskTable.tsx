@@ -7,19 +7,39 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  IconButton,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   TextField,
 } from "@mui/material";
-import React, { useState } from "react";
-
+import React, { useMemo, useState } from "react";
+import EditIcon from "@mui/icons-material/Edit"; // Material-UI Edit icon
+import DeleteIcon from "@mui/icons-material/Delete";
 export default function TaskTable() {
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
-  const [tasks, setTasks] = useState<{
-    id: string;
-    title: string;
-    description: string;
-    assigneeName: string;
-  }[]>([]);
-  const [newTask, setNewTask] = useState([]);
+
+  const { tasks } = useJobs();
+  console.log(tasks?.docs);
+  const rows = useMemo(() => {
+    if (!tasks?.docs.length) return [];
+
+    return tasks.docs.map((doc) => {
+      const task = doc.data();
+      return {
+        id: task.id,
+        title: task.title,
+        description:task.description,
+        assigneeName: task.assigneeName,
+      };
+    });
+  }, [tasks]);
+  console.log(rows);
+
   return (
     <>
       <div className="w-full flex flex-col items-start gap-2">
@@ -38,46 +58,59 @@ export default function TaskTable() {
           setCreateTaskDialogOpen(false);
         }}
         open={createTaskDialogOpen}
-        // Pass the setTasks function to update tasks state
-        updateTasks={(newTasks) => setTasks(newTasks)}
       />
       {/* Render tasks in a table */}
-      <table>
-        <thead>
-          <tr>
-            <th>Task Title</th>
-            <th>Task Description</th>
-            <th>Staff Name</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tasks.map((task) => {
-            return (
-              <tr key={task.id}>
-                <td>{task.title}</td>
-                <td>{task.description}</td>
-                <td>{task.assigneeName}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <TableContainer component={Paper} className="smaller-table">
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Task Title</TableCell>
+              <TableCell align="right">Task Description</TableCell>
+              <TableCell align="right">Assignee Name</TableCell>
+              <TableCell align="right">Actions</TableCell>{" "}
+              {/* Add Actions column */}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row) => (
+              <TableRow key={row.id}>
+                <TableCell component="th" scope="row">
+                  {row.title}
+                </TableCell>
+                <TableCell align="right">{row.description}</TableCell>
+                <TableCell align="right">{row.assigneeName}</TableCell>
+                <TableCell align="right">
+                <IconButton
+                aria-label="edit"
+                color="primary"
+                onClick={() => {
+                 // setSelectedStaff(row);
+                  setCreateTaskDialogOpen(true);
+                }}
+              >
+                <EditIcon /> 
+                </IconButton>
+                  <IconButton
+                    aria-label="delete"
+                    color="secondary"
+                    onClick={() => console.log(row.id)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </>
   );
 }
-function CreateTask({
-  open,
-  close,
-  updateTasks,
-}: {
-  open: boolean;
-  close: () => void;
-  updateTasks: (tasks: any[]) => void;
-}) {
+function CreateTask({ open, close }: { open: boolean; close: () => void }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   //const[newTask, setNewTask] = useState("");
-  const { Task } = useJobs();
+  const { tasks } = useJobs();
   const [assigneeId, setAssigneeId] = useState("");
   //const Autocomplete = ["Jane", "Mark", "Wesley", "Sheila"]; //some sample names for the dropdown
   const createTask = () => {
@@ -92,7 +125,7 @@ function CreateTask({
       staffName: assigneeId,
     };
 
-    Task.create(title, description, assigneeId);
+    //Task.create(title, description, assigneeId);
 
     setTitle("");
     setDescription("");
@@ -145,7 +178,7 @@ function CreateTask({
           )}
           value={assigneeId}
           onChange={(event, newValue) => {
-            if (!newValue) return
+            if (!newValue) return;
             setAssigneeId(newValue);
           }}
         />

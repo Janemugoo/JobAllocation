@@ -24,6 +24,10 @@ export class Job {
       assigneeId,
     });
   }
+  getJobs() {
+    const tasksQuery = query(collection(this.store, "tasks"));
+    return tasksQuery;
+  }
   updateJob() {}
   deleteJob() {}
   getJobByStatus(jobStatus: JobStatus) {}

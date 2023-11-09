@@ -24,22 +24,30 @@ export class Staff extends Employee {
     this.department = department;
   }
   async create(staffName: string, staffDepartment: string) {
-    const staffID= await this.generateID() //This line calls the generateID method asynchronously to get a unique staff ID.
-      return await addDoc(collection(this.store, "staff"), { //this line adds a new document to the "staff" collection in the Firestore database
-        staffName,
-        staffDepartment,
-        staffID,
-      });
-   }
-  async generateID() {//generateID This method generates a unique staff ID
+    const staffID = await this.generateID(); //This line calls the generateID method asynchronously to get a unique staff ID.
+    return await addDoc(collection(this.store, "staff"), {
+      //this line adds a new document to the "staff" collection in the Firestore database
+      staffName,
+      staffDepartment,
+      staffID,
+    });
+  }
+  async generateID() {
+    //generateID This method generates a unique staff ID
     const staffsQuery = query(
       collection(this.store, "staff"),
       orderBy("createdAt", "asc"),
       limit(3)
     );
-    const staffs = await getDocs(staffsQuery); //This line executes the query and retrieves the documents from Firestore. 
+    const staffs = await getDocs(staffsQuery); //This line executes the query and retrieves the documents from Firestore.
     console.log(staffs);
     if (!staffs.docs.length) return "SKN-001";
+    const lastStaff = staffs.docs.at(0)?.data();
+    console.log(lastStaff?.staffID.split("-"));
+    const [code, number] = lastStaff?.staffID.split("-");
+    const validNumber = parseInt(number) + 1;
+
+    return`${code}-00${validNumber}`
   }
   getAssignableStaff() {
     return query(collection(this.store, "staff"));

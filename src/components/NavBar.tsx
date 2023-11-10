@@ -74,8 +74,9 @@ function UserData() {
       >
         <Typography
           variant="subtitle1"
-          className="hidden md:block text-white hover:text-primary normal-case"
+          className="hidden md:block text-black hover:text-primary normal-case"
         >
+          
           Logout
         </Typography>
       </Button>

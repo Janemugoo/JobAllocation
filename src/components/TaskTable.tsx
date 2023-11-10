@@ -8,6 +8,8 @@ import {
   DialogContentText,
   DialogTitle,
   IconButton,
+  Menu,
+  MenuItem,
   Paper,
   Table,
   TableBody,
@@ -19,11 +21,17 @@ import {
 } from "@mui/material";
 import React, { useMemo, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit"; // Material-UI Edit icon
+import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import DeleteIcon from "@mui/icons-material/Delete";
+
 export default function TaskTable() {
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedAssignee, setSelectedAssignee] = useState<null | string>(null);
 
   const { tasks } = useJobs();
+  const staffNames = ["Jane", "Mark", "Wesley", "Sheila"]; // Sample staff names
+
   console.log(tasks?.docs);
   const rows = useMemo(() => {
     if (!tasks?.docs.length) return [];
@@ -33,7 +41,7 @@ export default function TaskTable() {
       return {
         id: task.id,
         title: task.title,
-        description:task.description,
+        description: task.description,
         assigneeName: task.assigneeName,
       };
     });
@@ -65,8 +73,7 @@ export default function TaskTable() {
           <TableHead>
             <TableRow>
               <TableCell>Task Title</TableCell>
-              <TableCell align="right">Task Description</TableCell>
-              <TableCell align="right">Assignee Name</TableCell>
+              <TableCell align="center">Task Description</TableCell>
               <TableCell align="right">Actions</TableCell>{" "}
               {/* Add Actions column */}
             </TableRow>
@@ -77,19 +84,43 @@ export default function TaskTable() {
                 <TableCell component="th" scope="row">
                   {row.title}
                 </TableCell>
-                <TableCell align="right">{row.description}</TableCell>
-                <TableCell align="right">{row.assigneeName}</TableCell>
+                <TableCell align="center">{row.description}</TableCell>
                 <TableCell align="right">
-                <IconButton
-                aria-label="edit"
-                color="primary"
-                onClick={() => {
-                 // setSelectedStaff(row);
-                  setCreateTaskDialogOpen(true);
-                }}
-              >
-                <EditIcon /> 
-                </IconButton>
+                  <IconButton
+                    aria-label="assign"
+                    color="primary"
+                    onClick={(event) => setAnchorEl(event.currentTarget)}
+                  >
+                    <AssignmentIndIcon />
+                  </IconButton>
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={() => setAnchorEl(null)}
+                  >
+                    {staffNames.map((staff) => (
+                      <MenuItem
+                        key={staff}
+                        selected={staff === selectedAssignee}
+                        onClick={() => {
+                          setSelectedAssignee("someStringValue");
+                          setAnchorEl(null);
+                        }}
+                      >
+                        {staff}
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                  <IconButton
+                    aria-label="edit"
+                    color="primary"
+                    onClick={() => {
+                      // setSelectedStaff(row);
+                      setCreateTaskDialogOpen(true);
+                    }}
+                  >
+                    <EditIcon />
+                  </IconButton>
                   <IconButton
                     aria-label="delete"
                     color="secondary"

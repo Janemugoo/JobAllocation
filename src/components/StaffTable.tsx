@@ -16,14 +16,22 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit"; // Material-UI Edit icon
 
 export default function StaffTable() {
+  const {
+    deleteStaffRow,
+    staffFields,
+    staffRowId,
+    setStaffFields,
+    setStaffRowId,
+    updateStaffRow,
+  } = useStaff();
   const [createStaffDialogOpen, setCreateStaffDialogOpen] = useState(false); //change to staff
   const { staffs, loading } = useGetStaffs();
-  console.log(staffs?.docs);
+
   const rows = useMemo(() => {
     if (!staffs?.docs.length) return [];
 
@@ -70,20 +78,24 @@ export default function StaffTable() {
                   <TableCell align="right">{row.staffDepartment}</TableCell>
                   <TableCell align="right">{row.id}</TableCell>
                   <TableCell align="right">
-                  <IconButton
-                aria-label="edit"
-                color="primary"
-                onClick={() => {
-                 // setSelectedStaff(row);
-                  setCreateStaffDialogOpen(true);
-                }}
-              >
-                <EditIcon /> 
-                </IconButton>
+                    <IconButton
+                      aria-label="edit"
+                      color="primary"
+                      onClick={() => {
+                        setStaffFields({
+                          staffDepartment: row.staffDepartment,
+                          staffName: row.staffName,
+                        }),
+                          setStaffRowId(row.id);
+                        setCreateStaffDialogOpen(true);
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
                     <IconButton
                       aria-label="delete"
                       color="secondary"
-                      onClick={() => console.log(row.id)}
+                      onClick={() => deleteStaffRow(row.id)}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -99,15 +111,43 @@ export default function StaffTable() {
 
       <CreateStaff
         open={createStaffDialogOpen}
-        close={() => setCreateStaffDialogOpen(false)}
+        isEditing={Boolean(staffRowId)}
+        staffID={staffRowId}
+        close={() => {
+          setStaffFields({ staffName: "", staffDepartment: "" }); // Reset the editStaffData state when dialog is closed
+          setCreateStaffDialogOpen(false);
+        }}
+        initialData={staffFields}
       />
     </>
   );
 }
-function CreateStaff({ open, close }: { open: boolean; close: () => void }) {
-  const [staffName, setStaffName] = useState("");
-  const [staffDepartment, setStaffDepartment] = useState("");
+function CreateStaff({
+  open,
+  close,
+  initialData,
+}: {
+  open: boolean;
+  close: () => void;
+  initialData: any;
+  isEditing: boolean;
+  staffID: string | null;
+}) {
+  const [staffName, setStaffName] = useState(
+    initialData ? initialData.staffName : ""
+  );
+  const [staffDepartment, setStaffDepartment] = useState(
+    initialData ? initialData.staffDepartment : ""
+  );
   const { Staff } = useStaff();
+
+  useEffect(() => {
+    //updates the form fields whenever initialData changes
+    if (initialData) {
+      setStaffName(initialData.staffName);
+      setStaffDepartment(initialData.staffDepartment);
+    }
+  }, [initialData]);
   const createEmployee = () => {
     console.log(staffName, staffDepartment);
     if (!staffName && !staffDepartment) {

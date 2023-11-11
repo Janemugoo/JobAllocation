@@ -53,11 +53,12 @@ export class Manager extends Employee {
     return managersQuery;
   }
   async updateManagerRow(managerID: string, updatedFields:{ managerName: string,  managerDepartment: string}) {
-    const managerDocRef = doc(this.store, 'managers', managerID);
+    const managerDocRef = doc(this.store, 'manager', managerID);
+    console.log (managerDocRef,managerID,updatedFields)
     await updateDoc(managerDocRef, updatedFields);
   }
   async deleteManagerRow(managerID: string) {
-    const managerDocRef = doc(this.store, "managers", managerID);
+    const managerDocRef = doc(this.store, "manager", managerID);
     await deleteDoc(managerDocRef);
   }
   updateInformation() {}

@@ -2,10 +2,13 @@ import {
   Firestore,
   addDoc,
   collection,
+  deleteDoc,
+  doc,
   getDocs,
   limit,
   orderBy,
   query,
+  updateDoc,
 } from "firebase/firestore";
 import { AssignedJob, Employee } from ".";
 
@@ -55,6 +58,14 @@ export class Staff extends Employee {
   getStaffs() {
     const staffsQuery = query(collection(this.store, "staff"));
     return staffsQuery;
+  }
+  async updateStaffRow(staffID: string, updatedFields:{ staffName: string,  staffDepartment: string}) {
+    const staffDocRef = doc(this.store, 'staff', staffID);
+    await updateDoc(staffDocRef, updatedFields);
+  }
+  async deleteStaffRow(staffID: string) {
+    const staffDocRef = doc(this.store, "staff", staffID);
+    await deleteDoc(staffDocRef);
   }
   updateInformation() {}
   delete() {}

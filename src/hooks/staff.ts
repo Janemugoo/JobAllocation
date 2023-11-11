@@ -1,13 +1,42 @@
 import { initFirestore } from "@/constants/firebase";
 import { Staff } from "@/services";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useCollection } from "react-firebase-hooks/firestore";
 
 const store = initFirestore();
 export function useStaff() {
   const staff = useMemo(() => new Staff(store), []);
+  const [staffs]=useCollection (staff.getStaffs()) 
+  
+  const [staffRowId, setStaffRowId] = useState(null);
+  const [staffFields, setStaffFields] = useState({
+    staffName: "",
+    staffDepartment: "",
+  });
+  const updateStaffRow = async (staffID: string, updatedFields: any) => {
+    //check on the type, updateStaffRow responsible for updating the staff row
+    await staff.updateStaffRow(staffID, updatedFields);
+    setStaffRowId(null);
+  };
+  const deleteStaffRow = async (staffID: string) => {
+    await staff.deleteStaffRow(staffID);
+  };
+  const staffNames= useMemo( ()=> {
+    return staffs?.docs.map((doc)=>{
+      const staff=doc.data()
+      return staff.staffName
+    })
+  },[staffs])
+
   return {
     Staff: staff,
+    deleteStaffRow,
+    staffRowId,
+    staffFields,
+    setStaffRowId,
+    setStaffFields,
+    updateStaffRow,
+    staffNames,
   };
 }
 

@@ -21,6 +21,7 @@ import EditIcon from "@mui/icons-material/Edit"; // Material-UI Edit icon
 
 import React, { useEffect, useMemo, useState } from "react";
 import { useGetManagers, useManager } from "@/hooks";
+import { doc } from "firebase/firestore";
 
 export default function ManagerTable() {
   const {
@@ -44,6 +45,7 @@ export default function ManagerTable() {
         id: manager.managerID,
         managerDepartment: manager.managerDepartment,
         managerName: manager.managerName,
+        
       };
     });
   }, [managers]);
@@ -94,8 +96,11 @@ export default function ManagerTable() {
                       aria-label="edit"
                       color="primary"
                       onClick={() => {
-                        setManagerFields ({managerDepartment:row.managerDepartment, managerName:row.managerName}),
-                        setManagerRowId(row.id); // Set data of manager being edited
+                        setManagerFields({
+                          managerDepartment: row.managerDepartment,
+                          managerName: row.managerName,
+                        }),
+                          setManagerRowId(row.id); // Set data of manager being edited
                         setCreateManagerDialogOpen(true);
                       }}
                     >
@@ -118,7 +123,7 @@ export default function ManagerTable() {
       <CreateManager
         open={createManagerDialogOpen}
         isEditing={Boolean(managerRowId)}
-        managerID= {managerRowId}
+        managerID={managerRowId}
         close={() => {
           setManagerFields({ managerName: "", managerDepartment: "" }); // Reset the editManagerData state when dialog is closed
           setCreateManagerDialogOpen(false);
@@ -132,12 +137,14 @@ function CreateManager({
   open,
   close,
   initialData,
+  isEditing,
+  managerID,
 }: {
   open: boolean;
   close: () => void;
   initialData: any;
   isEditing: boolean;
-  managerID:string | null
+  managerID: string | null;
 }) {
   const [managerName, setManagerName] = useState(
     initialData ? initialData.managerName : ""
@@ -147,6 +154,7 @@ function CreateManager({
   );
   const { Manager, updateManagerRow } = useManager();
 
+  const buttonText = isEditing ? "Update manager" : "Create manager";
   useEffect(() => {
     //updates the form fields whenever initialData changes
     if (initialData) {
@@ -154,8 +162,10 @@ function CreateManager({
       setManagerDepartment(initialData.managerDepartment);
     }
   }, [initialData]);
-const updateManager = ()=>{}
-
+  const updateManager = () => {
+    if (!managerID) return;
+    updateManagerRow(managerID, { managerName, managerDepartment });
+  };
   const createManager = () => {
     if (!managerName && !managerDepartment) {
       return;
@@ -163,6 +173,11 @@ const updateManager = ()=>{}
     Manager.create(managerName, managerDepartment);
     setManagerName("");
     setManagerDepartment("");
+  };
+  const handleClick = () => {
+    
+    if (isEditing) return updateManager();
+    return createManager();
   };
   return (
     <Dialog onClose={close} open={open}>
@@ -200,7 +215,7 @@ const updateManager = ()=>{}
       </DialogContent>
       <DialogActions>
         <Button onClick={close}>Cancel</Button>
-        <Button onClick={createManager}>Create New Manager</Button>
+        <Button onClick={handleClick}>{buttonText}</Button>
       </DialogActions>
     </Dialog>
   );

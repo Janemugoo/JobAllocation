@@ -1,4 +1,4 @@
-import { useJobs } from "@/hooks";
+import { useJobs, useStaff } from "@/hooks";
 import {
   Autocomplete,
   Button,
@@ -30,9 +30,8 @@ export default function TaskTable() {
   const [selectedAssignee, setSelectedAssignee] = useState<null | string>(null);
 
   const { tasks } = useJobs();
-  const staffNames = ["Jane", "Mark", "Wesley", "Sheila"]; // Sample staff names
+  const { staffNames } = useStaff();
 
-  console.log(tasks?.docs);
   const rows = useMemo(() => {
     if (!tasks?.docs.length) return [];
 
@@ -46,7 +45,6 @@ export default function TaskTable() {
       };
     });
   }, [tasks]);
-  console.log(rows);
 
   return (
     <>
@@ -98,7 +96,7 @@ export default function TaskTable() {
                     open={Boolean(anchorEl)}
                     onClose={() => setAnchorEl(null)}
                   >
-                    {staffNames.map((staff) => (
+                    {staffNames?.map((staff) => (
                       <MenuItem
                         key={staff}
                         selected={staff === selectedAssignee}

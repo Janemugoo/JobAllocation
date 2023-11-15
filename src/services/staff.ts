@@ -39,18 +39,19 @@ export class Staff extends Employee {
     //generateID This method generates a unique staff ID
     const staffsQuery = query(
       collection(this.store, "staff"),
-      orderBy("createdAt", "asc"),
+
       limit(3)
     );
-    const staffs = await getDocs(staffsQuery); //This line executes the query and retrieves the documents from Firestore.
-    console.log(staffs);
+
+    const staffs = await getDocs(staffsQuery);
+
     if (!staffs.docs.length) return "SKN-001";
     const lastStaff = staffs.docs.at(0)?.data();
-    console.log(lastStaff?.staffID.split("-"));
+
     const [code, number] = lastStaff?.staffID.split("-");
     const validNumber = parseInt(number) + 1;
-
-    return`${code}-00${validNumber}`
+    console.log(validNumber);
+    return `${code}-00${validNumber}`;
   }
   getAssignableStaff() {
     return query(collection(this.store, "staff"));
@@ -59,15 +60,18 @@ export class Staff extends Employee {
     const staffsQuery = query(collection(this.store, "staff"));
     return staffsQuery;
   }
-  async updateStaffRow(staffID: string, updatedFields:{ staffName: string,  staffDepartment: string}) {
-    const staffDocRef = doc(this.store, 'staff', staffID);
+  async updateStaffRow(
+    docID: string,
+    updatedFields: { staffName: string; staffDepartment: string }
+  ) {
+    const staffDocRef = doc(this.store, "staff", docID);
     await updateDoc(staffDocRef, updatedFields);
   }
-  async deleteStaffRow(staffID: string) {
-    const staffDocRef = doc(this.store, "staff", staffID);
+  async deleteStaffRow(docID: string) {
+    const staffDocRef = doc(this.store, "staff", docID);
     await deleteDoc(staffDocRef);
   }
-  updateInformation() {}
-  delete() {}
+  
+  
   retrive() {}
 }

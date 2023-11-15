@@ -39,10 +39,10 @@ export class Manager extends Employee {
   async generateID() {
     const managersQuery = query(collection(this.store, "manager"), limit(3));
     const managers = await getDocs(managersQuery);
-    console.log(managers);
+    
     if (!managers.docs.length) return "MKN-001";
     const lastManager = managers.docs.at(0)?.data();
-    console.log(lastManager?.managerID.split("-"));
+    
     const [code, number] = lastManager?.managerID.split("-");
     const validNumber = parseInt(number) + 1;
 
@@ -52,13 +52,13 @@ export class Manager extends Employee {
     const managersQuery = query(collection(this.store, "manager"));
     return managersQuery;
   }
-  async updateManagerRow(managerID: string, updatedFields:{ managerName: string,  managerDepartment: string}) {
-    const managerDocRef = doc(this.store, 'manager', managerID);
-    console.log (managerDocRef,managerID,updatedFields)
+  async updateManagerRow(docID: string, updatedFields:{ managerName: string,  managerDepartment: string}) {
+    const managerDocRef = doc(this.store, 'manager', docID);
+    console.log (managerDocRef,docID,updatedFields)
     await updateDoc(managerDocRef, updatedFields);
   }
-  async deleteManagerRow(managerID: string) {
-    const managerDocRef = doc(this.store, "manager", managerID);
+  async deleteManagerRow(docID: string) {
+    const managerDocRef = doc(this.store, "manager", docID);
     await deleteDoc(managerDocRef);
   }
   updateInformation() {}

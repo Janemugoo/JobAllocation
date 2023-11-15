@@ -8,14 +8,14 @@ export function useStaff() {
   const staff = useMemo(() => new Staff(store), []);
   const [staffs]=useCollection (staff.getStaffs()) 
   
-  const [staffRowId, setStaffRowId] = useState(null);
+  const [staffRowId, setStaffRowId] = useState<string | null>(null);
   const [staffFields, setStaffFields] = useState({
     staffName: "",
     staffDepartment: "",
   });
-  const updateStaffRow = async (staffID: string, updatedFields: any) => {
+  const updateStaffRow = async (docID: string, updatedFields: any) => {
     //check on the type, updateStaffRow responsible for updating the staff row
-    await staff.updateStaffRow(staffID, updatedFields);
+    await staff.updateStaffRow(docID, updatedFields);
     setStaffRowId(null);
   };
   const deleteStaffRow = async (staffID: string) => {
@@ -24,7 +24,10 @@ export function useStaff() {
   const staffNames= useMemo( ()=> {
     return staffs?.docs.map((doc)=>{
       const staff=doc.data()
-      return staff.staffName
+      return {
+        name:staff.staffName, 
+        docID: doc.id
+      };
     })
   },[staffs])
 

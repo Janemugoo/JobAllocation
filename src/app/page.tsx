@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { AppLayout } from "@/components/AppLayout";
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import {
@@ -21,7 +21,7 @@ interface Category {
   [key: string]: Task[];
 }
 
-const initialData:Category = {
+const initialData: Category = {
   toDo: [
     { id: 'task-1', content: 'Task 1 - To Do' },
     { id: 'task-2', content: 'Task 2 - To Do' },
@@ -72,55 +72,60 @@ export default function Home() {
       setTasks(updatedTasks);
     }
   };
+
   return (
     <AppLayout>
-      
       <Container>
-      <Typography variant="h4" align="center" gutterBottom>
-        Task Board
-      </Typography>
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Grid container spacing={3}>
-          {Object.entries(tasks).map(([category, items]) => (
-            <Grid item key={category} xs={12} sm={4}>
-              <Paper elevation={3} style={{ padding: '16px', minHeight: '200px' }}>
-                <Typography variant="h6" align="center" gutterBottom>
-                  {category}
-                </Typography>
-                <Droppable droppableId={category}>
-                  {(provided) => (
-                    <List className="bg-primary" ref={provided.innerRef} {...provided.droppableProps}>
-                      {items.map((task, index) => (
-                        <Draggable
-                          key={task.id}
-                          draggableId={task.id}
-                          index={index}
-                        >
-                          {(provided, snapshot) => (
-                            <ListItem
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              style={{
-                                ...provided.draggableProps.style,
-                                // Add styles based on snapshot.isDragging if needed
-                              }} 
-                            >
-                              <ListItemText primary={task.content} />
-                            </ListItem>
-                          )}
-                        </Draggable>
-                      ))}
-                      {provided.placeholder}
-                    </List>
-                  )}
-                </Droppable>
-              </Paper>
-            </Grid>
-          ))}
-        </Grid>
-      </DragDropContext>
-    </Container>
+        <Typography variant="h4" align="center" gutterBottom>
+          Task Board
+        </Typography>
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Grid container spacing={3}>
+            {Object.entries(tasks).map(([category, items]) => (
+              <Grid item key={category} xs={12} sm={4}>
+                <Paper elevation={3} style={{ padding: '16px', minHeight: '200px' }}>
+                  <Typography variant="h6" align="center" gutterBottom>
+                    {category}
+                  </Typography>
+                  <Droppable droppableId={category}>
+                    {(provided) => (
+                      <List
+                        className="bg-primary"
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                        style={{ userSelect: 'auto' }} // Ensure userSelect is 'auto'
+                      >
+                        {items.map((task, index) => (
+                          <Draggable
+                            key={task.id}
+                            draggableId={task.id}
+                            index={index}
+                          >
+                            {(provided, snapshot) => (
+                              <ListItem
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                style={{
+                                  ...provided.draggableProps.style,
+                                  // Add styles based on snapshot.isDragging if needed
+                                }}
+                              >
+                                <ListItemText primary={task.content} />
+                              </ListItem>
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
+                      </List>
+                    )}
+                  </Droppable>
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
+        </DragDropContext>
+      </Container>
     </AppLayout>
   );
 }

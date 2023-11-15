@@ -45,7 +45,7 @@ export default function ManagerTable() {
         id: manager.managerID,
         managerDepartment: manager.managerDepartment,
         managerName: manager.managerName,
-        
+        docID: doc.id
       };
     });
   }, [managers]);
@@ -100,7 +100,7 @@ export default function ManagerTable() {
                           managerDepartment: row.managerDepartment,
                           managerName: row.managerName,
                         }),
-                          setManagerRowId(row.id); // Set data of manager being edited
+                          setManagerRowId(row.docID); // Set data of manager being edited
                         setCreateManagerDialogOpen(true);
                       }}
                     >
@@ -109,7 +109,7 @@ export default function ManagerTable() {
                     <IconButton
                       aria-label="delete"
                       color="secondary"
-                      onClick={() => deleteManagerRow(row.id)}
+                      onClick={() => deleteManagerRow(row.docID)}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -181,7 +181,7 @@ function CreateManager({
   };
   return (
     <Dialog onClose={close} open={open}>
-      <DialogTitle>Create New Manager</DialogTitle>
+      <DialogTitle>Edit Manager</DialogTitle>
       <DialogContent>
         <DialogContentText>
           Fill in the form below to create a new Manager.

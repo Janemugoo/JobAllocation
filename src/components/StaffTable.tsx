@@ -41,6 +41,7 @@ export default function StaffTable() {
         id: staff.staffID,
         staffDepartment: staff.staffDepartment,
         staffName: staff.staffName,
+        docID:doc.id
       };
     });
   }, [staffs]);
@@ -86,7 +87,7 @@ export default function StaffTable() {
                           staffDepartment: row.staffDepartment,
                           staffName: row.staffName,
                         }),
-                          setStaffRowId(row.id);
+                          setStaffRowId(row.docID);
                         setCreateStaffDialogOpen(true);
                       }}
                     >
@@ -95,7 +96,7 @@ export default function StaffTable() {
                     <IconButton
                       aria-label="delete"
                       color="secondary"
-                      onClick={() => deleteStaffRow(row.id)}
+                      onClick={() => deleteStaffRow(row.docID)}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -126,7 +127,10 @@ function CreateStaff({
   open,
   close,
   initialData,
+  isEditing,
+  staffID
 }: {
+
   open: boolean;
   close: () => void;
   initialData: any;
@@ -139,7 +143,7 @@ function CreateStaff({
   const [staffDepartment, setStaffDepartment] = useState(
     initialData ? initialData.staffDepartment : ""
   );
-  const { Staff } = useStaff();
+  const { Staff, updateStaffRow, } = useStaff();
 
   useEffect(() => {
     //updates the form fields whenever initialData changes
@@ -148,6 +152,10 @@ function CreateStaff({
       setStaffDepartment(initialData.staffDepartment);
     }
   }, [initialData]);
+  const updateStaff = () => {
+    if (!staffID) return;
+    updateStaffRow(staffID, { staffName, staffDepartment });
+  };
   const createEmployee = () => {
     console.log(staffName, staffDepartment);
     if (!staffName && !staffDepartment) {
@@ -156,10 +164,16 @@ function CreateStaff({
     Staff.create(staffName, staffDepartment);
     setStaffName("");
     setStaffDepartment("");
+  
+  };
+  const handleClick = () => {
+    
+    if (isEditing) return updateStaff();
+    return createEmployee();
   };
   return (
     <Dialog onClose={close} open={open}>
-      <DialogTitle>Create New Staff</DialogTitle>
+      <DialogTitle>Edit Staff</DialogTitle>
       <DialogContent>
         <DialogContentText>
           Fill in the form below to create a new Staff.
@@ -193,7 +207,7 @@ function CreateStaff({
       </DialogContent>
       <DialogActions>
         <Button onClick={close}>Cancel</Button>
-        <Button onClick={createEmployee}>Create New Staff</Button>
+        <Button onClick={handleClick}>Edit Staff</Button>
       </DialogActions>
     </Dialog>
   );

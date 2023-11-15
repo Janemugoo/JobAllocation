@@ -8,7 +8,7 @@ const store = initFirestore();
 
 export function useManager() {
   const manager = useMemo(() => new Manager(store), []);
-  const [managerRowId, setManagerRowId] = useState(null);
+  const [managerRowId, setManagerRowId] = useState<string | null>( null);
   const [managerFields, setManagerFields] = useState({
     managerName: "",
     managerDepartment: "",

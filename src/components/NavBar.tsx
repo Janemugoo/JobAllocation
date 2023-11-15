@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import ExitToAppRoundedIcon from "@mui/icons-material/ExitToAppRounded";
 import RoofingIcon from "@mui/icons-material/Roofing";
+import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
 import { getAuth, signOut } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { app } from "@/constants/firebase";
@@ -24,8 +25,10 @@ export function NavBar() {
     <>
       <Box className="h-full rounded-sm text-xs md:text-md border-transparent transition-shadow shadow-lg flex flex-col justify-between z-50 overflow-hidden">
         <Box>
-          <Box className="text-center h-14 md:h-16 w-full xl:h-20 flex flex-col justify-center place-items-center sticky">
-            <RoofingIcon className="self-center mx-3 h-6 w-6 sm:h-9 inline-block" />
+        <Box
+      className="text-center h-14 md:h-16 w-full xl:h-20 flex flex-col justify-center place-items-center sticky"
+      sx={{ backgroundColor: 'primary.main', color: 'primary.contrastText' }}
+    >            <AssignmentIndOutlinedIcon className="self-center mx-3 h-6 w-6 sm:h-9 inline-block" />
             <Typography
               variant="h6"
               className="hidden md:flex text-center mx-2.5 font-bold whitespace-nowrap"

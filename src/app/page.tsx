@@ -1,6 +1,7 @@
 "use client";
 import { AppLayout } from "@/components/AppLayout";
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import {
   Paper,
   Typography,
@@ -22,17 +23,17 @@ interface Category {
 }
 
 const initialData: Category = {
-  toDo: [
+  ToDo: [
     { id: 'task-1', content: 'Task 1 - To Do' },
     { id: 'task-2', content: 'Task 2 - To Do' },
     // Add more tasks as needed
   ],
-  inProgress: [
+  InProgress: [
     { id: 'task-3', content: 'Task 3 - In Progress' },
     { id: 'task-4', content: 'Task 4 - In Progress' },
     // Add more tasks as needed
   ],
-  completed: [
+  Completed: [
     { id: 'task-5', content: 'Task 5 - Completed' },
     { id: 'task-6', content: 'Task 6 - Completed' },
     // Add more tasks as needed
@@ -42,7 +43,7 @@ const initialData: Category = {
 export default function Home() {
   const [tasks, setTasks] = useState<Category>(initialData);
 
-  const handleDragEnd = (result: DropResult) => {
+  const handleDragEnd = (result: any) => {
     if (!result.destination) {
       return; // Drop outside the list
     }
@@ -79,7 +80,7 @@ export default function Home() {
         <Typography variant="h4" align="center" gutterBottom>
           Task Board
         </Typography>
-        <DragDropContext onDragEnd={handleDragEnd}>
+        <DndProvider backend={HTML5Backend}>
           <Grid container spacing={3}>
             {Object.entries(tasks).map(([category, items]) => (
               <Grid item key={category} xs={12} sm={4}>
@@ -87,45 +88,69 @@ export default function Home() {
                   <Typography variant="h6" align="center" gutterBottom>
                     {category}
                   </Typography>
-                  <Droppable droppableId={category}>
-                    {(provided) => (
-                      <List
-                        className="bg-primary"
-                        ref={provided.innerRef}
-                        {...provided.droppableProps}
-                        style={{ userSelect: 'auto' }} // Ensure userSelect is 'auto'
-                      >
-                        {items.map((task, index) => (
-                          <Draggable
-                            key={task.id}
-                            draggableId={task.id}
-                            index={index}
-                          >
-                            {(provided, snapshot) => (
-                              <ListItem
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                style={{
-                                  ...provided.draggableProps.style,
-                                  // Add styles based on snapshot.isDragging if needed
-                                }}
-                              >
-                                <ListItemText primary={task.content} />
-                              </ListItem>
-                            )}
-                          </Draggable>
-                        ))}
-                        {provided.placeholder}
-                      </List>
-                    )}
-                  </Droppable>
+                  <DroppableContainer category={category} items={items} />
                 </Paper>
               </Grid>
             ))}
           </Grid>
-        </DragDropContext>
+        </DndProvider>
       </Container>
     </AppLayout>
   );
 }
+
+interface DroppableContainerProps {
+  category: string;
+  items: Task[];
+}
+
+const DroppableContainer: React.FC<DroppableContainerProps> = ({ category, items }) => {
+  return (
+    <List className="bg-white" style={{ userSelect: 'auto' }}>
+      {items.map((task, index) => (
+        <TaskItem key={task.id} task={task} index={index} category={category} />
+      ))}
+    </List>
+  );
+};
+
+
+interface TaskItemProps {
+  task: Task;
+  index: number;
+  category: string;
+}
+
+const TaskItem: React.FC<TaskItemProps> = ({ task, index, category }) => {
+  const [{ isDragging }, drag] = useDrag({
+    type: 'TASK',
+    item: { id: task.id, index, category },
+  });
+
+  const [, drop] = useDrop({
+    accept: 'TASK',
+    hover: (item: any) => {
+      // Handle hover logic if needed
+    },
+    drop: () => {
+      // Handle drop logic if needed
+    },
+  });
+
+  return (
+    <div ref={(node) => drag(drop(node))}>
+      <Paper
+        elevation={3}
+        style={{
+          marginBottom: '8px',
+          opacity: isDragging ? 0.5 : 1, // Optional: reduce opacity when dragging
+        }}
+      >
+        <ListItem>
+          <ListItemText primary={task.content} />
+        </ListItem>
+      </Paper>
+    </div>
+  );
+};
+  

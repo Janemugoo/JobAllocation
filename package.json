@@ -9,16 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@dnd-kit/sortable": "^8.0.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@hookform/resolvers": "^3.3.1",
     "@mui/icons-material": "^5.14.11",
     "@mui/material": "^5.14.6",
-    "@types/node": "20.5.7",
-    "@types/react": "18.2.21",
     "@types/react-calendar": "^4.1.0",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.15",
+    "dnd-kit": "^0.0.0-0",
     "encoding": "^0.1.13",
     "eslint": "8.48.0",
     "eslint-config-next": "^13.5.3",
@@ -35,10 +35,12 @@
     "react-firebase-hooks": "^5.1.1",
     "react-hook-form": "^7.46.1",
     "tailwindcss": "3.3.3",
-    "typescript": "5.2.2",
     "yup": "^1.2.0"
   },
   "devDependencies": {
-    "@types/react-beautiful-dnd": "^13.1.7"
+    "@types/node": "20.9.0",
+    "@types/react": "18.2.37",
+    "@types/react-beautiful-dnd": "^13.1.7",
+    "typescript": "5.2.2"
   }
 }

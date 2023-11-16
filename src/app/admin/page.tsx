@@ -34,22 +34,22 @@ export default function Page() {
         <Tab
         value={AdminTabs.MANAGERS}
           label="Managers"
-          className="py-2 px-6 hover:bg-purple-300  hover:text-black transition duration-300"
+          className="py-2 px-6 hover:bg-gray-300  hover:text-black transition duration-300"
         />
         <Tab
          value={AdminTabs.STAFFS}
           label="Staffs"
-          className="py-2 px-6 hover:bg-purple-300  hover:text-black transition duration-300"
+          className="py-2 px-6 hover:bg-gray-300  hover:text-black transition duration-300"
         />
         <Tab
          value={AdminTabs.UNASSIGNEDTASKS}
           label="Unassigned Tasks"
-          className="py-2 px-6 hover:bg-purple-300  hover:text-black transition duration-300"
+          className="py-2 px-6 hover:bg-gray-300  hover:text-black transition duration-300"
         />
         <Tab
          value={AdminTabs.ASSIGNEDTASKS}
           label="Assigned Tasks"
-          className="py-2 px-6 hover:bg-purple-300  hover:text-black transition duration-300"
+          className="py-2 px-6 hover:bg-gray-300  hover:text-black transition duration-300"
         />
       </Tabs>
 

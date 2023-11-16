@@ -1,11 +1,12 @@
-"use client"
+"use client";
 import { app } from "../../../constants/firebase";
 import Alert from "@mui/material/Alert";
 import Image from "next/image";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";  
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useCallback } from "react";
-import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Link from "next/link";
@@ -14,8 +15,10 @@ import { useRouter } from "next/navigation";
 const schema = yup.object().shape({
   email: yup.string().email().required(),
   password: yup.string().min(8).max(32).required(),
-  confirmPassword: yup.string()
-    .required().oneOf([yup.ref('password')], 'Passwords must match')
+  confirmPassword: yup
+    .string()
+    .required()
+    .oneOf([yup.ref("password")], "Passwords must match"),
 });
 
 interface SignUpForm {
@@ -29,38 +32,32 @@ export default function SignUp() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignUpForm>({resolver:yupResolver(schema)}); //Form type is SignUpForm
+  } = useForm<SignUpForm>({ resolver: yupResolver(schema) }); //Form type is SignUpForm
   const auth = getAuth(app);
-  const [
-    createUserWithEmailAndPassword,
-  ] = useCreateUserWithEmailAndPassword(auth);
-  const router = useRouter()
-  
-  //custom hook 
+  const [createUserWithEmailAndPassword] =
+    useCreateUserWithEmailAndPassword(auth);
+  const router = useRouter();
+
+  //custom hook
   const onSubmit: SubmitHandler<SignUpForm> = async (data) => {
     const { email, password } = data;
     await createUserWithEmailAndPassword(email, password);
-    router.push('/')
+    router.push("/");
   };
 
-
   return (
-    <section className="bg-gray-50 ">
+    <section className="bg-black-50 ">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a
           href="#"
-          className="flex items-center mb-6 text-2xl font-semibold text-gray-900 "
+          className="flex items-center mb-6 text-2xl font-semibold text-black-900"
         >
-          <img
-            className="w-8 h-8 mr-2"
-            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
-            alt="logo"
-          />
+          <AssignmentIndOutlinedIcon className="w-10 h-10 mr-2 text-secondary" />
           DUTCH
         </a>
-        <div className="w-full bg-white rounded-lg shadow ">
+        <div className="w-center bg-secondary rounded-lg shadow ">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
+            <h1 className="text-xl font-bold leading-tight tracking-tight text-black-900 md:text-2xl">
               Sign up for an account
             </h1>
             <form
@@ -70,7 +67,7 @@ export default function SignUp() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block mb-2 text-sm font-medium text-gray-900 "
+                  className="block mb-2 text-sm font-medium text-black-900 "
                 >
                   Your email
                 </label>
@@ -78,16 +75,15 @@ export default function SignUp() {
                   type="email"
                   {...register("email")}
                   id="email"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "
+                  className="bg-black-50 border border-black-300 text-black-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "
                   placeholder="name@company.com"
-                  
                 />
-              <p>{errors.email?.message}</p>
+                <p>{errors.email?.message}</p>
               </div>
               <div>
                 <label
                   htmlFor="password"
-                  className="block mb-2 text-sm font-medium text-gray-900 "
+                  className="block mb-2 text-sm font-medium text-black-900 "
                 >
                   Password
                 </label>
@@ -96,7 +92,7 @@ export default function SignUp() {
                   {...register("password")}
                   id="password"
                   placeholder="••••••••"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "
+                  className="bg-gray-50 border border-gray-300 text-black-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "
                   required
                 />
                 <p>{errors.password?.message}</p>
@@ -104,7 +100,7 @@ export default function SignUp() {
               <div>
                 <label
                   htmlFor="confirmPassword"
-                  className="block mb-2 text-sm font-medium text-gray-900 "
+                  className="block mb-2 text-sm font-medium text-black-900 "
                 >
                   Confirm Password
                 </label>
@@ -113,10 +109,10 @@ export default function SignUp() {
                   {...register("confirmPassword")}
                   id="confirmPassword"
                   placeholder="••••••••"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "
+                  className="bg-gray-50 border border-gray-300 text-black-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "
                   required
                 />
-              <p>{errors.confirmPassword?.message}</p>
+                <p>{errors.confirmPassword?.message}</p>
               </div>
               <button
                 type="submit"
@@ -124,13 +120,13 @@ export default function SignUp() {
               >
                 Sign up
               </button>
-              <p className="text-sm font-light text-gray-500 ">
+              <p className="text-sm font-light text-black-500 ">
                 Already have an account?{" "}
                 <a
                   href="#"
                   className="font-medium text-primary-600 hover:underline "
                 >
-                 <Link href="/auth/">Log in</Link>
+                  <Link href="/auth/">Log in</Link>
                 </a>
               </p>
             </form>
@@ -140,4 +136,3 @@ export default function SignUp() {
     </section>
   );
 }
-

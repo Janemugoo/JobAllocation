@@ -24,8 +24,8 @@ interface Category {
 
 const initialData: Category = {
   ToDo: [
-    { id: 'task-1', content: 'Task 1 - To Do' },
-    { id: 'task-2', content: 'Task 2 - To Do' },
+    { id: 'task-1', content: 'Task 1 - Wifi Connection' },
+    { id: 'task-2', content: 'Task 2 - Write Report' },
     // Add more tasks as needed
   ],
   InProgress: [

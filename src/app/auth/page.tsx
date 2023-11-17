@@ -5,6 +5,7 @@ import Image from "next/image";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth"; // enables me to import firebase related imports from firebase Auth
 import { useForm, SubmitHandler } from "react-hook-form"; //enables me to reuse a piece of code (a hook)
 import { useCallback } from "react";
+import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth'; //reusable piece of code (hook from git)
 import Link from "next/link";
 import * as yup from "yup";
@@ -40,11 +41,11 @@ const onSubmit: SubmitHandler<LoginForm> = (data) => signInWithEmailAndPassword(
   return ( //css code for the login page
     <section className="bg-gray-50 ">
     <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-      <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 ">
-        <img className="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo" />
-        DUTCH
-      </a>
-      <div className="w-full bg-white rounded-lg shadow ">
+    <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900">
+  <AssignmentIndOutlinedIcon className="w-10 h-10 mr-2 text-secondary" />
+  DUTCH
+</a>
+      <div className="w-center bg-secondary rounded-lg shadow ">
         <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
           <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl ">
             Log in to your account
@@ -66,15 +67,15 @@ const onSubmit: SubmitHandler<LoginForm> = (data) => signInWithEmailAndPassword(
                   <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300" required />
                 </div>
                 <div className="ml-3 text-sm">
-                  <label htmlFor="remember" className="text-gray-500 ">Remember me</label>
+                  <label htmlFor="remember" className="text-black-500 ">Remember me</label>
                 </div>
               </div>
               <a href="#" className="text-sm font-medium text-primary-600 hover:underline ">Forgot password?</a>
             </div>
-            <button type="submit" className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
+            <button type="submit" className="w-full text-white bg-Black-600 hover:bg-black-700 focus:ring-4 focus:outline-none focus:ring-black-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
               Log in
             </button>
-            <p className="text-sm font-light text-gray-500 ">
+            <p className="text-sm font-light text-black-500 ">
               Don’t have an account yet? <Link href="/auth/signup" className="font-medium text-primary-600 hover:underline ">Sign up</ Link>
             </p>
           </form>

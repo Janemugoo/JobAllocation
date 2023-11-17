@@ -1,5 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@tailwind config;
 
+html,
+body,
+#root {
+  @apply bg-primary text-white box-border;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar:horizontal {
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-secondary rounded-xl;
+}
+
+.task > ::-webkit-scrollbar-thumb {
+  @apply bg-primary rounded-xl;
+}

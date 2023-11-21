@@ -40,6 +40,7 @@ export function useStaff() {
     setStaffFields,
     updateStaffRow,
     staffNames,
+    staffs,
   };
 }
 

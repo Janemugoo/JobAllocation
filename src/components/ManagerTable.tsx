@@ -18,6 +18,8 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete"; // Material Icons delete icon
 import EditIcon from "@mui/icons-material/Edit"; // Material-UI Edit icon
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload"; // Material-UI Download icon
+
 
 import React, { useEffect, useMemo, useState } from "react";
 import { useGetManagers, useManager } from "@/hooks";
@@ -49,7 +51,7 @@ export default function ManagerTable() {
       };
     });
   }, [managers]);
-  console.log(rows);
+  
 
   function setSelectedManager(row: {
     id: any;
@@ -59,6 +61,11 @@ export default function ManagerTable() {
     throw new Error("Function not implemented.");
   }
 
+  const handleDownload = () => {
+    // Implement your download logic here
+    console.log("Download clicked");
+  };
+
   return (
     <>
       <div className="w-full flex flex-col items-start gap-2">
@@ -66,9 +73,19 @@ export default function ManagerTable() {
           variant="outlined"
           onClick={() => {
             setCreateManagerDialogOpen(true);
+            setManagerRowId(null);
           }}
         >
           New Manager
+        </Button>
+
+        <Button
+          variant="outlined"
+          color="primary"
+          startIcon={<CloudDownloadIcon />}
+          onClick={handleDownload}
+        >
+          Download
         </Button>
 
         {/* Table component */}
@@ -154,7 +171,7 @@ function CreateManager({
   );
   const { Manager, updateManagerRow } = useManager();
 
-  const buttonText = isEditing ? "Update manager" : "Create manager";
+  const actionText = isEditing ? "Update " : "Create ";
   useEffect(() => {
     //updates the form fields whenever initialData changes
     if (initialData) {
@@ -181,7 +198,7 @@ function CreateManager({
   };
   return (
     <Dialog onClose={close} open={open}>
-      <DialogTitle>Edit Manager</DialogTitle>
+      <DialogTitle>{actionText} Manager</DialogTitle>
       <DialogContent>
         <DialogContentText>
           Fill in the form below to create a new Manager.
@@ -215,7 +232,7 @@ function CreateManager({
       </DialogContent>
       <DialogActions>
         <Button onClick={close}>Cancel</Button>
-        <Button onClick={handleClick}>{buttonText}</Button>
+        <Button onClick={handleClick}>{actionText}</Button>
       </DialogActions>
     </Dialog>
   );

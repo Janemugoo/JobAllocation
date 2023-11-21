@@ -19,6 +19,7 @@ import {
 import React, { useEffect, useMemo, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit"; // Material-UI Edit icon
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload"; // Material-UI Download icon
 
 export default function StaffTable() {
   const {
@@ -47,6 +48,11 @@ export default function StaffTable() {
   }, [staffs]);
   console.log(rows);
 
+  const handleDownload = () => {
+    // Implement your download logic here
+    console.log("Download clicked");
+  };
+
   return (
     <>
       <div className="w-full flex flex-col items-start gap-2">
@@ -54,9 +60,19 @@ export default function StaffTable() {
           variant="outlined"
           onClick={() => {
             setCreateStaffDialogOpen(true);
+            setStaffRowId(null);
           }}
         >
           New Staff
+        </Button>
+
+        <Button
+          variant="outlined"
+          color="primary"
+          startIcon={<CloudDownloadIcon />}
+          onClick={handleDownload}
+        >
+          Download
         </Button>
 
         <TableContainer component={Paper} className="smaller-table">
@@ -145,6 +161,8 @@ function CreateStaff({
   );
   const { Staff, updateStaffRow, } = useStaff();
 
+  const actionText = isEditing ? "Update " : "Create ";
+
   useEffect(() => {
     //updates the form fields whenever initialData changes
     if (initialData) {
@@ -173,7 +191,7 @@ function CreateStaff({
   };
   return (
     <Dialog onClose={close} open={open}>
-      <DialogTitle>Edit Staff</DialogTitle>
+      <DialogTitle>{actionText}New Staff</DialogTitle>
       <DialogContent>
         <DialogContentText>
           Fill in the form below to create a new Staff.
@@ -207,7 +225,7 @@ function CreateStaff({
       </DialogContent>
       <DialogActions>
         <Button onClick={close}>Cancel</Button>
-        <Button onClick={handleClick}>Edit Staff</Button>
+        <Button onClick={handleClick}>{actionText}New Staff</Button>
       </DialogActions>
     </Dialog>
   );

@@ -72,7 +72,7 @@ const onSubmit: SubmitHandler<LoginForm> = (data) => signInWithEmailAndPassword(
               </div>
               <a href="#" className="text-sm font-medium text-primary-600 hover:underline ">Forgot password?</a>
             </div>
-            <button type="submit" className="w-full text-white bg-Black-600 hover:bg-black-700 focus:ring-4 focus:outline-none focus:ring-black-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
+            <button type="submit" className="w-full text-white bg-Black-600 hover:bg-black-700 focus:ring-4 focus:outline-none focus:ring-black-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center border border-black ">
               Log in
             </button>
             <p className="text-sm font-light text-black-500 ">

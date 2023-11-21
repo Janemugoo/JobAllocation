@@ -1,18 +1,14 @@
-export class Comment {
-    public commentDate: Date;
-    public content: string;
+// src/services/commentsService.ts
+import { initFirestore } from "@/constants/firebase";
 
-    constructor (
-        commentDate:Date,
-        content: string,
-    ) {
-        this.commentDate=commentDate;
-        this.content=content;
- 
-    }
-createComment() {}
-deleteComment() {}
-updateComment() {}
-retriveComment() {}
+const store = initFirestore();
 
-}
+export const commentsService = {
+  addComment: async (taskId: string, text: string) => {
+    await store.collection("comments").add({
+      taskId,
+      text,
+      createdAt: new Date(),
+    });
+  },
+};

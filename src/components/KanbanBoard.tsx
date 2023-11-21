@@ -1,4 +1,4 @@
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useMemo, useState } from "react";
 import { Column, Id, Task } from "../types";
 import ColumnContainer from "./ColumnContainer";
@@ -168,7 +168,7 @@ function KanbanBoard() {
       border-2
       border-columnBackgroundColor
       p-4
-      ring-rose-500
+      ring-secondary
       hover:ring-2
       flex
       gap-2

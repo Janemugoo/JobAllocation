@@ -1,50 +1,50 @@
-"use client";
-import {
-  AccordionSummary,
-  Typography,
-  AccordionDetails,
-  Accordion,
-  Box,
-  Checkbox,
-  AccordionActions,
-  Button,
-} from "@mui/material";
-import React from "react";
+import React, { useMemo } from "react";
+import { List, ListItem, ListItemText, Paper, Typography } from "@mui/material";
+import { useJobs } from "@/hooks";
 
-export default function TaskPanel() {
-  const [expanded, setExpanded] = React.useState<string | false>();
-
-  const handleChange =
-    (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
-      setExpanded(newExpanded ? panel : false);
-    };
+const TableComponent = () => {
+  const { assignedJobs } = useJobs();
+  const rows = useMemo(() => {
+    if (!assignedJobs?.docs.length) return [];
+    return assignedJobs.docs.map((doc) => {
+      const assignedJob = doc.data();
+      return {
+        title: assignedJob.title,
+        description: assignedJob.description,
+        assigneeName: assignedJob.assigneeName,
+        docID: doc.id,
+      };
+    });
+  }, [assignedJobs]);
   return (
-    <Accordion
-      className="bg-gray-50 "
-      expanded={expanded === "panel1"}
-      onChange={handleChange("panel1")}
-      elevation={1}
-    >
-      <AccordionSummary
-        className="bg-white"
-        aria-controls="panel1d-content"
-        id="panel1d-header"
-      >
-        <Typography>Week1 Tasks </Typography>
-      </AccordionSummary>
+    <Paper>
+      <List>
+        {/* Table Header */}
+        <ListItem>
+          <ListItemText>
+            <Typography variant="subtitle1">Title</Typography>
+          </ListItemText>
+          <ListItemText>
+            <Typography variant="subtitle1">Description</Typography>
+          </ListItemText>
+          <ListItemText>
+            <Typography variant="subtitle1">StaffName</Typography>
+          </ListItemText>
+          {/* Add more columns as needed */}
+        </ListItem>
 
-      <AccordionDetails>
-        {[1, 2, 3, 4].map((number) => {
-          return <TaskItem task={{ number }} key={number} />;
-        })}
-      </AccordionDetails>
-    </Accordion>
+        {/* Table Rows */}
+        {rows.map((row) => (
+          <ListItem key={row.title}>
+            <ListItemText >{row.title}</ListItemText>
+            <ListItemText>{row.description}</ListItemText>
+            <ListItemText>{row.assigneeName}</ListItemText>
+            {/* Add more columns as needed */}
+          </ListItem>
+        ))}
+      </List>
+    </Paper>
   );
-}
-function TaskItem({ task }: { task: { [key: string]: any } }) {
-  return (
-    <Box className="flex items-center my-4 gap-2">
-      <Checkbox /> <Typography>Fix LAN Cables in the HRs Office </Typography>
-    </Box>
-  );
-}
+};
+
+export default TableComponent;

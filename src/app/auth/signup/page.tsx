@@ -46,11 +46,11 @@ export default function SignUp() {
   };
 
   return (
-    <section className="bg-black-50 ">
+    <section className="bg-white ">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a
           href="#"
-          className="flex items-center mb-6 text-2xl font-semibold text-black-900"
+          className="flex items-center mb-6 text-2xl font-semibold text-black"
         >
           <AssignmentIndOutlinedIcon className="w-10 h-10 mr-2 text-secondary" />
           DUTCH
@@ -116,7 +116,7 @@ export default function SignUp() {
               </div>
               <button
                 type="submit"
-                className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+                className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center border border-black  "
               >
                 Sign up
               </button>

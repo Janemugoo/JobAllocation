@@ -8,8 +8,6 @@ import {
   DialogContentText,
   DialogTitle,
   IconButton,
-  Menu,
-  MenuItem,
   Paper,
   Table,
   TableBody,
@@ -23,11 +21,14 @@ import {
 import React, { useEffect, useMemo, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit"; // Material-UI Edit icon
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
+import CommentIcon from "@mui/icons-material/Comment";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload"; // Material-UI Download icon
 import { title } from "process";
-
+import { AssignTask } from "./AssignTask";
 export default function TaskTable() {
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
+  const [assignTaskDialogOpen, setAssignTaskDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedAssignee, setSelectedAssignee] = useState<null | string>(null);
   const {
@@ -61,6 +62,12 @@ export default function TaskTable() {
    
 await updateTaskRow (taskID,{assigneeName:staffName})
   };
+
+  const handleDownload = () => {
+    // Implement your download logic here
+    console.log("Download clicked");
+  };
+
   return (
     <>
       <div className="w-full flex flex-col items-start gap-2">
@@ -68,10 +75,21 @@ await updateTaskRow (taskID,{assigneeName:staffName})
           variant="outlined"
           onClick={() => {
             setCreateTaskDialogOpen(true);
+            setTaskRowId(null);
           }}
         >
           Add Task
         </Button>
+
+        <Button
+          variant="outlined"
+          color="primary"
+          startIcon={<CloudDownloadIcon />}
+          onClick={handleDownload}
+        >
+          Download
+        </Button>
+
       </div>{" "}
       {/**opens the create task dialog onclick */}
       <CreateTask
@@ -83,6 +101,15 @@ await updateTaskRow (taskID,{assigneeName:staffName})
           setCreateTaskDialogOpen(false);
         }}
         initialData={taskFields}
+
+      />
+      <AssignTask
+      open={assignTaskDialogOpen}
+      taskID={taskRowId}
+      close={() => {
+        setTaskFields({ title: "", description: "" });
+        setAssignTaskDialogOpen(false);
+      }}
       />
       {/* Render tasks in a table */}
       <TableContainer component={Paper} className="smaller-table">
@@ -108,33 +135,18 @@ await updateTaskRow (taskID,{assigneeName:staffName})
                   <IconButton
                     aria-label="assign"
                     color="primary"
-                    onClick={(event) => setAnchorEl(event.currentTarget)}
+                    onClick={() => {
+                      setTaskFields({
+                        title: row.title,
+                        description: row.description,
+                      });
+                      setTaskRowId(row.docID);
+                      setAssignTaskDialogOpen(true);
+                    }}
                   >
                     <AssignmentIndIcon />
                   </IconButton>
-                  <Menu
-                    onChange={(idk) => {}}
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={() => setAnchorEl(null)}
-                  >
-                    {staffNames?.map((staff) => {
-                      const docID = row.docID;
-                      return (
-                        <MenuItem
-                          key={staff.name}
-                          selected={staff.name === selectedAssignee}
-                          onClick={() => {
-
-                            setSelectedAssignee(staff.name);
-                            handleAssignee(staff.name, row.docID, );
-                          }}
-                        >
-                          {staff.name}
-                        </MenuItem>
-                      );
-                    })}
-                  </Menu>
+                 
                   <IconButton
                     aria-label="edit"
                     color="primary"
@@ -178,12 +190,44 @@ function CreateTask({
   isEditing: boolean;
   taskID: string | null;
 }) {
+  const { staffNames } = useStaff();
+  const [assigneeName, setAssigneeName] = useState< string>("");
   const [title, setTitle] = useState(initialData ? initialData.title : "");
   const [description, setDescription] = useState(
     initialData ? initialData.description : ""
   );
-  //const[newTask, setNewTask] = useState("");
   const { tasks, updateTaskRow, createTaskRow } = useJobs();
+  const actionText = isEditing ? "Update " : "Create ";
+
+  const updateTask = () => {
+    if (!taskID) return;
+    updateTaskRow(taskID, { title, description, assigneeName: "" });
+  };
+
+  const createTask = () => {
+    console.log(title, description);
+    if (!title && !description && !assigneeName) {
+      return;
+    }
+    createTaskRow(title, description, assigneeName);
+    setTitle("");
+    setDescription("");
+    setAssigneeName("");
+    close();
+  };
+
+  const options = useMemo(() => {
+    if (!staffNames) return []
+    return staffNames.map((s) => {
+      return s.name;
+    });
+  }, [staffNames]);
+
+  const handleClick = () => {
+    if (isEditing) return updateTask();
+    return createTask();
+  };
+
   useEffect(() => {
     //updates the form fields whenever initialData changes
     if (initialData) {
@@ -191,31 +235,10 @@ function CreateTask({
       setDescription(initialData.description);
     }
   }, [initialData]);
-  const updateTask = () => {
-    if (!taskID) return;
-    updateTaskRow(taskID, { title, description, assigneeName: "" });
-  };
-  const [assigneeId, setAssigneeId] = useState("");
-  //const Autocomplete = ["Jane", "Mark", "Wesley", "Sheila"]; //some sample names for the dropdown
-  const createTask = () => {
-    console.log(title, description);
-    if (!title && !description && !assigneeId) {
-      return;
-    }
-    createTaskRow(title, description, assigneeId);
-    setTitle("");
-    setDescription("");
-    setAssigneeId("");
 
-    close();
-  };
-  const handleClick = () => {
-    if (isEditing) return updateTask();
-    return createTask();
-  };
   return (
     <Dialog onClose={close} open={open}>
-      <DialogTitle>Create Task</DialogTitle>
+      <DialogTitle>{actionText}Task</DialogTitle>
       <DialogContent>
         <DialogContentText>
           Fill in the form below to create a task.
@@ -250,21 +273,21 @@ function CreateTask({
         <Autocomplete
           disablePortal
           id="combo-box-demo"
-          options={["Jane", "Mark", "Wesley", "Sheila"]}
+          options={options}
           sx={{ width: 500, length: 50 }}
           renderInput={(params) => (
             <TextField {...params} label="Select Staff" />
           )}
-          value={assigneeId}
+          value={assigneeName}
           onChange={(event, newValue) => {
             if (!newValue) return;
-            setAssigneeId(newValue);
+            setAssigneeName(newValue);
           }}
         />
       </DialogContent>
       <DialogActions>
         <Button onClick={close}>Cancel</Button>
-        <Button onClick={handleClick}>Create Task</Button>
+        <Button onClick={handleClick}>{actionText} Task</Button>
       </DialogActions>
     </Dialog>
   );

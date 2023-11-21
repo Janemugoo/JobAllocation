@@ -60,8 +60,9 @@ export class Job {
   getAssignedJobs(){
     const tasksQuery=query(
       collection(this.store,"tasks"),
-      where("assigneeName","==",true)
+      where("assigneeName","!=","")
     )
+    console.log(tasksQuery)
     return tasksQuery;
 
   }

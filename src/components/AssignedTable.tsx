@@ -1,5 +1,6 @@
 import { useJobs } from "@/hooks";
 import {
+  Button,
   Paper,
   Table,
   TableBody,
@@ -10,10 +11,11 @@ import {
 } from "@mui/material";
 import { title } from "process";
 import React, { useMemo } from "react";
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload"; // Material-UI Download icon
 
 export default function AssignedTable() {
   const tasks: any[] = []; // Define your tasks array here
-  const { unassignedJobs, assignedJobs } = useJobs();
+  const { assignedJobs } = useJobs();
   const rows = useMemo(() => {
     if (!assignedJobs?.docs.length) return [];
     return assignedJobs.docs.map((doc) => {
@@ -25,31 +27,44 @@ export default function AssignedTable() {
         docID: doc.id,
       };
     });
-  }, []);
+  }, [assignedJobs]);
+
+  const handleDownload = () => {
+    // Implement your download logic here
+    console.log("Download clicked");
+  };
+
   return (
+    <>
+    <Button
+          variant="outlined"
+          color="primary"
+          startIcon={<CloudDownloadIcon />}
+          onClick={handleDownload}
+        >
+          Download
+        </Button>
+
     <TableContainer component={Paper} className="smaller-table">
       <Table>
         <TableHead>
           <TableRow>
             <TableCell>Task Title</TableCell>
             <TableCell>Task Description</TableCell>
-            <TableCell>Task ID</TableCell>
             <TableCell>Staff Name</TableCell>
-            <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {tasks.map((task) => (
-            <TableRow key={task.id}>
+          {rows.map((task) => (
+            <TableRow key={task.docID}>
               <TableCell>{task.title}</TableCell>
               <TableCell>{task.description}</TableCell>
-              <TableCell>{task.id}</TableCell>
               <TableCell>{task.assigneeName}</TableCell>
-              <TableCell>{task.Actions}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
+    </>
   );
 }

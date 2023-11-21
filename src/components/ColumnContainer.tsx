@@ -62,7 +62,7 @@ function ColumnContainer({
       bg-columnBackgroundColor
       opacity-40
       border-2
-      border-pink-500
+      border-secondary
       w-[350px]
       h-[500px]
       max-h-[500px]
@@ -129,7 +129,7 @@ function ColumnContainer({
           {!editMode && column.title}
           {editMode && (
             <input
-              className="bg-black focus:border-rose-500 border rounded outline-none px-2"
+              className="bg-white focus:border-secondary border border-secondary rounded outline-none px-2"
               value={column.title}
               onChange={(e) => updateColumn(column.id, e.target.value)}
               autoFocus
@@ -148,7 +148,7 @@ function ColumnContainer({
             deleteColumn(column.id);
           }}
           className="
-        stroke-gray-500
+        stroke-secondary
         hover:stroke-white
         hover:bg-columnBackgroundColor
         rounded
@@ -175,7 +175,7 @@ function ColumnContainer({
       </div>
       {/* Column footer */}
       <button
-        className="flex gap-2 items-center border-columnBackgroundColor border-2 rounded-md p-4 border-x-columnBackgroundColor hover:bg-mainBackgroundColor hover:text-rose-500 active:bg-black"
+        className="flex gap-2 items-center border-columnBackgroundColor border-2 rounded-md p-4 border-x-columnBackgroundColor hover:bg-mainBackgroundColor hover:text-secondary active:bg-black"
         onClick={() => {
           createTask(column.id);
         }}

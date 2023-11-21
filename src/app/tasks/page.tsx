@@ -1,5 +1,5 @@
 "use client";
-import TaskPanel from "@/components/Accordion";
+import TableComponent from "@/components/Accordion";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { useGetTasksforWeeks, useJobs } from "@/hooks";
@@ -28,7 +28,15 @@ export default function Page() {
       <main className="py-4 px-6 flex flex-col justify-center items-start gap-4 ">
         <div className="flex justify-between items-center w-full">
           <div>
-            <Typography>Hello</Typography>
+          <Typography
+      variant="h6"
+      color="primary"  // You can change the color to match your theme
+      fontWeight="bold"
+      textAlign="center"
+      mt={3}  // Adjust the margin-top as needed
+    >
+      Check Your Assigned Task and Lets Get Going
+    </Typography>
           </div>
           <div>
             <Button
@@ -44,10 +52,7 @@ export default function Page() {
         </div>
         <div className="flex gap-4 justify-items-center justify-normal w-full">
           <div className=" basis-3/4">
-            {tasks.docs.map((number: any) => {
-              return <TaskPanel key={number.id} />;
-            })}
-            <TaskPanel />
+           <TableComponent/>
           </div>
           <div className="basis-1/4 bg-borderColor-primary p-4 rounded-md">
             <Calendar

@@ -19,6 +19,7 @@ export default function TaskDetails() {
 
   const [comment, setComment] = useState('');
   const [taskComments, setComments] = useState<{}[]>(() => {
+    console.log(comments)
     if(!comments) return []
     return comments.docs.map((doc) =>{
       const data = doc.data()
@@ -45,11 +46,9 @@ export default function TaskDetails() {
     const getTask = async () => {
       if(loading){
         const detailsTask = await  task.getTasksById(taskID)
-        console.log (detailsTask)
         if(!detailsTask) return 
         setDetails(detailsTask)
         setLoading(false)
-        console.log(detailsTask)
       }
     }
 

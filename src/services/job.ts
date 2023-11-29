@@ -1,4 +1,4 @@
-import { Firestore, addDoc, collection, deleteDoc, doc, getDocs, limit, query, updateDoc, where } from "firebase/firestore";
+import { Firestore, addDoc, collection, deleteDoc, doc, getDocs, limit, query, updateDoc, where, getDoc } from "firebase/firestore";
 
 export class Job {
   public description?: string;
@@ -49,6 +49,8 @@ export class Job {
     const tasksQuery = query(collection(this.store, "tasks"));
     return tasksQuery;
   }
+
+
   getUnassignedJobs(){
     const tasksQuery=query(
       collection(this.store,"tasks"),
@@ -57,13 +59,30 @@ export class Job {
     return tasksQuery;
   }
 
-  getTaskByUser() {
+  getTasksByUser(name: string) {
     const tasksQuery=query(
       collection(this.store,"tasks"),
-      where("assigneeName","==","")
+      where("assigneeName","==",name)
     )
     return tasksQuery;
   }
+
+  getTasksComments(id: string) {
+    const tasksQuery=query(
+      collection(this.store,"comments"),
+      where("taskID","==",id)
+    )
+    return tasksQuery;
+  }
+
+  async getTasksById(id: string) {
+    const docRef = doc(this.store, "cities", "SF");
+    const docSnap = await getDoc(docRef);
+
+    if(docSnap.exists()) return docSnap.data()
+  }
+
+
   getAssignedJobs(){
     const tasksQuery=query(
       collection(this.store,"tasks"),

@@ -50,7 +50,7 @@ const TableComponent = () => {
           {/* Table Rows */}
           <TableBody>
             {rows.map((row) => (
-              <TableRow key={row.title}>
+              <TableRow key={row.title} >
                 <TableCell>{row.title}</TableCell>
                 <TableCell>{row.description}</TableCell>
                 <TableCell>{row.assigneeName}</TableCell>

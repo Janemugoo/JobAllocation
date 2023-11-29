@@ -5,22 +5,28 @@ import { initFirestore } from '@/constants/firebase';
 import { doc, DocumentData } from "firebase/firestore";
 import { useComment, useJobs } from "@/hooks";
 import { Button } from "@mui/material";
+import { useCollection } from "react-firebase-hooks/firestore";
 
 
 
 export default function TaskDetails() {
-  const store = initFirestore()
-  const [loading, setLoading] = useState<boolean>(true)
-  const [details, setDetails] = useState<DocumentData>()
-  const {task} = useJobs()
-  const {addComment} = useComment()
-
-  // const [data] = useCollection(task.getTaskByUser())
 
   const {taskID} = useParams<{taskID: string}>();
-  //const { taskID } = useParams();
+  const {task} = useJobs()
+  const [loading, setLoading] = useState<boolean>(true)
+  const [details, setDetails] = useState<DocumentData>()
+  const [comments] = useCollection(task.getTasksComments(taskID))
+  const {addComment} = useComment()
+
   const [comment, setComment] = useState('');
-  const [comments, setComments] = useState<string[]>([]);
+  const [taskComments, setComments] = useState<{}[]>(() => {
+    if(!comments) return []
+    return comments.docs.map((doc) =>{
+      const data = doc.data()
+
+      return {comment: data.comment}
+    })
+  });
 
   const handleCommentChange = (e: any) => {
     setComment(e.target.value);
@@ -30,7 +36,7 @@ export default function TaskDetails() {
 
   const handleAddComment = () => {
     if (comment.trim() !== '') {
-      setComments([...comments, comment]);
+      setComments([...taskComments, {comment}]);
       setComment('');
     }
   };
@@ -40,7 +46,6 @@ export default function TaskDetails() {
     const getTask = async () => {
       if(loading){
         const detailsTask = await  task.getTasksById(taskID)
-        const comments = await  task.getTasksComments(taskID)
         if(!detailsTask) return 
         setDetails(detailsTask)
         setLoading(false)
@@ -77,9 +82,9 @@ export default function TaskDetails() {
       <div className="mb-4">
         <h2 className="text-lg font-semibold mb-2">Comments</h2>
         <ul>
-          {comments.map((comment, index) => (
+          {taskComments.map((comment: any, index) => (
             <li key={index} className="list-disc ml-4 text-gray-700">
-              {comment}
+              {comment.comment}
             </li>
           ))}
         </ul>

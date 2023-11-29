@@ -56,6 +56,7 @@ function UserData() {
 
   const logout = () => {
     signOut(auth);
+    localStorage.removeItem("is2factor")
   };
 
   if (!user) return null;

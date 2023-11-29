@@ -149,7 +149,7 @@ export default function TaskTable() {
           </TableHead>
           <TableBody>
             {rows.map((row) => (
-                <TableRow key={row.id} onClick={() => {
+                <TableRow className="cursor-pointer" key={row.id} onClick={() => {
                   router.push(`/tasks/${row.docID}`)
                 }}>
                   <TableCell component="th" scope="row">

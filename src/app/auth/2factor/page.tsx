@@ -27,12 +27,12 @@ export default function Page() {
 
   return (
     <div className="max-w-md mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Staff ID Form</h1>
+      <h1 className="text-2xl font-bold mb-4">Employee ID Form</h1>
 
       <form onSubmit={handle2Factor}>
         <div className="mb-4">
           <label htmlFor="staffId" className="block text-sm font-medium text-gray-600">
-            Staff ID
+            Employee ID
           </label>
           <input
             type="text"

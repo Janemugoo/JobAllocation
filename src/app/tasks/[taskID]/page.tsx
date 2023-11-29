@@ -45,9 +45,11 @@ export default function TaskDetails() {
     const getTask = async () => {
       if(loading){
         const detailsTask = await  task.getTasksById(taskID)
+        console.log (detailsTask)
         if(!detailsTask) return 
         setDetails(detailsTask)
         setLoading(false)
+        console.log(detailsTask)
       }
     }
 

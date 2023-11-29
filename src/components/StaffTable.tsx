@@ -16,10 +16,12 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit"; // Material-UI Edit icon
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload"; // Material-UI Download icon
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 export default function StaffTable() {
   const {
@@ -32,6 +34,7 @@ export default function StaffTable() {
   } = useStaff();
   const [createStaffDialogOpen, setCreateStaffDialogOpen] = useState(false); //change to staff
   const { staffs, loading } = useGetStaffs();
+  const pdfRef = useRef(null);
 
   const rows = useMemo(() => {
     if (!staffs?.docs.length) return [];
@@ -48,9 +51,25 @@ export default function StaffTable() {
   }, [staffs]);
   console.log(rows);
 
-  const handleDownload = () => {
-    // Implement your download logic here
-    console.log("Download clicked");
+ const handleDownload = () => {
+    const input = pdfRef.current;
+    if (!input){
+      console.error('pdfRef.current is null')
+      return;
+    }
+    html2canvas(input).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4", true);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+      const imgX = (pdfWidth - imgWidth * ratio) / 2;
+      const imgY = 30;
+      pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+      pdf.save('Staffs.pdf');
+    });
   };
 
   return (
@@ -75,7 +94,7 @@ export default function StaffTable() {
           Download
         </Button>
 
-        <TableContainer component={Paper} className="smaller-table">
+        <TableContainer component={Paper} className="smaller-table" ref={pdfRef}>
           <Table>
             <TableHead>
               <TableRow>

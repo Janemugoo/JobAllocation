@@ -108,5 +108,5 @@ const Navlinks = [
   { name: "Dashboard", link: "/" },
   { name: "Tasks", link: "/tasks" },
   { name: "Reports", link: "/report" },
-  { name: "Account Settings", link: "/account-settings" },
+  
 ];

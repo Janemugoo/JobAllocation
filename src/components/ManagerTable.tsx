@@ -19,10 +19,10 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete"; // Material Icons delete icon
 import EditIcon from "@mui/icons-material/Edit"; // Material-UI Edit icon
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload"; // Material-UI Download icon
-
-
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useGetManagers, useManager } from "@/hooks";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 import { doc } from "firebase/firestore";
 
 export default function ManagerTable() {
@@ -37,6 +37,7 @@ export default function ManagerTable() {
   const [createManagerDialogOpen, setCreateManagerDialogOpen] = useState(false);
   const [editManagerData, setEditManagerData] = useState(null); // State to store data of manager being edited
   const { managers, loading } = useGetManagers();
+  const pdfRef = useRef(null);
 
   const rows = useMemo(() => {
     if (!managers?.docs.length) return [];
@@ -47,11 +48,10 @@ export default function ManagerTable() {
         id: manager.managerID,
         managerDepartment: manager.managerDepartment,
         managerName: manager.managerName,
-        docID: doc.id
+        docID: doc.id,
       };
     });
   }, [managers]);
-  
 
   function setSelectedManager(row: {
     id: any;
@@ -62,13 +62,29 @@ export default function ManagerTable() {
   }
 
   const handleDownload = () => {
-    // Implement your download logic here
-    console.log("Download clicked");
+    const input = pdfRef.current;
+    if (!input){
+      console.error('pdfRef.current is null')
+      return;
+    }
+    html2canvas(input).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4", true);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+      const imgX = (pdfWidth - imgWidth * ratio) / 2;
+      const imgY = 30;
+      pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+      pdf.save('Managers.pdf');
+    });
   };
 
   return (
     <>
-      <div className="w-full flex flex-col items-start gap-2">
+      <div className="w-full flex flex-col items-start gap-2"  >
         <Button
           variant="outlined"
           onClick={() => {
@@ -89,8 +105,8 @@ export default function ManagerTable() {
         </Button>
 
         {/* Table component */}
-        <TableContainer component={Card} className="table-fixed">
-          <Table>
+        <TableContainer component={Card} className="table-fixed" ref={pdfRef}>
+          <Table >
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
@@ -192,7 +208,6 @@ function CreateManager({
     setManagerDepartment("");
   };
   const handleClick = () => {
-    
     if (isEditing) return updateManager();
     return createManager();
   };

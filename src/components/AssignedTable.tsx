@@ -10,10 +10,13 @@ import {
   TableRow,
 } from "@mui/material";
 import { title } from "process";
-import React, { useMemo } from "react";
+import React, { useMemo, useRef } from "react";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload"; // Material-UI Download icon
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 export default function AssignedTable() {
+  const pdfRef = useRef(null);
   const tasks: any[] = []; // Define your tasks array here
   const { assignedJobs } = useJobs();
   const rows = useMemo(() => {
@@ -30,8 +33,24 @@ export default function AssignedTable() {
   }, [assignedJobs]);
 
   const handleDownload = () => {
-    // Implement your download logic here
-    console.log("Download clicked");
+    const input = pdfRef.current;
+    if (!input){
+      console.error('pdfRef.current is null')
+      return;
+    }
+    html2canvas(input).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4", true);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+      const imgX = (pdfWidth - imgWidth * ratio) / 2;
+      const imgY = 30;
+      pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+      pdf.save('AssignedTasks.pdf');
+    });
   };
 
   return (
@@ -45,7 +64,7 @@ export default function AssignedTable() {
           Download
         </Button>
 
-    <TableContainer component={Paper} className="smaller-table">
+    <TableContainer component={Paper} className="smaller-table" ref={pdfRef}>
       <Table>
         <TableHead>
           <TableRow>

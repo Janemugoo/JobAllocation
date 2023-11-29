@@ -18,19 +18,31 @@ import {
   TextField,
   selectClasses,
 } from "@mui/material";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit"; // Material-UI Edit icon
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import CommentIcon from "@mui/icons-material/Comment";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload"; // Material-UI Download icon
-import { title } from "process";
+
+import CommentDialog from "./CommentDialog";
 import { AssignTask } from "./AssignTask";
+import jsPDF from "jspdf"; // Import the main jsPDF library
+import html2canvas from "html2canvas";
+import { useComment } from "@/hooks/comment";
+import Link from "next/link";
+
 export default function TaskTable() {
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
   const [assignTaskDialogOpen, setAssignTaskDialogOpen] = useState(false);
+  const [commentDialogOpen, setCommentDialogOpen] = useState(false);
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedAssignee, setSelectedAssignee] = useState<null | string>(null);
+  const [selectedTaskForComment, setSelectedTaskForComment] = useState<
+    null | string
+  >(null);
+
   const {
     tasks,
     deleteTaskRow,
@@ -40,9 +52,9 @@ export default function TaskTable() {
     setTaskFields,
     updateTaskRow,
   } = useJobs();
-
+  const pdfRef = useRef(null);
   const { staffNames } = useStaff();
-
+  const { addComment } = useComment();
   const rows = useMemo(() => {
     if (!tasks?.docs.length) return [];
 
@@ -57,15 +69,31 @@ export default function TaskTable() {
       };
     });
   }, [tasks]);
-  const handleAssignee = async(staffName: string, taskID:string) => {
+  const handleAssignee = async (staffName: string, taskID: string) => {
     if (!staffNames) return;
-   
-await updateTaskRow (taskID,{assigneeName:staffName})
+
+    await updateTaskRow(taskID, { assigneeName: staffName });
   };
 
   const handleDownload = () => {
-    // Implement your download logic here
-    console.log("Download clicked");
+    const input = pdfRef.current;
+    if (!input){
+      console.error('pdfRef.current is null')
+      return;
+    }
+    html2canvas(input).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4", true);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+      const imgX = (pdfWidth - imgWidth * ratio) / 2;
+      const imgY = 30;
+      pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+      pdf.save('UnassignedTasks.pdf');
+    });
   };
 
   return (
@@ -89,7 +117,6 @@ await updateTaskRow (taskID,{assigneeName:staffName})
         >
           Download
         </Button>
-
       </div>{" "}
       {/**opens the create task dialog onclick */}
       <CreateTask
@@ -101,18 +128,17 @@ await updateTaskRow (taskID,{assigneeName:staffName})
           setCreateTaskDialogOpen(false);
         }}
         initialData={taskFields}
-
       />
       <AssignTask
-      open={assignTaskDialogOpen}
-      taskID={taskRowId}
-      close={() => {
-        setTaskFields({ title: "", description: "" });
-        setAssignTaskDialogOpen(false);
-      }}
+        open={assignTaskDialogOpen}
+        taskID={taskRowId}
+        close={() => {
+          setTaskFields({ title: "", description: "" });
+          setAssignTaskDialogOpen(false);
+        }}
       />
       {/* Render tasks in a table */}
-      <TableContainer component={Paper} className="smaller-table">
+      <TableContainer component={Paper} className="smaller-table" ref={pdfRef}>
         <Table>
           <TableHead>
             <TableRow>
@@ -125,55 +151,79 @@ await updateTaskRow (taskID,{assigneeName:staffName})
           </TableHead>
           <TableBody>
             {rows.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell component="th" scope="row">
-                  {row.title}
-                </TableCell>
-                <TableCell align="center">{row.description}</TableCell>
-                <TableCell align="right">{row.id}</TableCell>
-                <TableCell align="right">
-                  <IconButton
-                    aria-label="assign"
-                    color="primary"
-                    onClick={() => {
-                      setTaskFields({
-                        title: row.title,
-                        description: row.description,
-                      });
-                      setTaskRowId(row.docID);
-                      setAssignTaskDialogOpen(true);
-                    }}
-                  >
-                    <AssignmentIndIcon />
-                  </IconButton>
-                 
-                  <IconButton
-                    aria-label="edit"
-                    color="primary"
-                    onClick={() => {
-                      setTaskFields({
-                        title: row.title,
-                        description: row.description,
-                      });
-                      setTaskRowId(row.docID);
-                      setCreateTaskDialogOpen(true);
-                    }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    aria-label="delete"
-                    color="secondary"
-                    onClick={() => deleteTaskRow(row.docID)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
+              <Link key={row.id} href={`/tasks/${row.docID}`}>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    {row.title}
+                  </TableCell>
+                  <TableCell align="center">{row.description}</TableCell>
+                  <TableCell align="right">{row.id}</TableCell>
+                  <TableCell align="right">
+                    <IconButton
+                      aria-label="assign"
+                      color="primary"
+                      onClick={() => {
+                        setTaskFields({
+                          title: row.title,
+                          description: row.description,
+                        });
+                        setTaskRowId(row.docID);
+                        setAssignTaskDialogOpen(true);
+                      }}
+                    >
+                      <AssignmentIndIcon />
+                    </IconButton>
+
+                    <IconButton
+                      aria-label="comment"
+                      color="secondary"
+                      onClick={() => {
+                        setSelectedTaskForComment(row.docID);
+                        setCommentDialogOpen(true);
+                      }}
+                    >
+                      {/* Add your comment icon here */}
+                      <CommentIcon />
+                    </IconButton>
+                    <IconButton
+                      aria-label="edit"
+                      color="primary"
+                      onClick={() => {
+                        setTaskFields({
+                          title: row.title,
+                          description: row.description,
+                        });
+                        setTaskRowId(row.docID);
+                        setCreateTaskDialogOpen(true);
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      aria-label="delete"
+                      color="secondary"
+                      onClick={() => deleteTaskRow(row.docID)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              </Link>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      <CommentDialog
+        open={commentDialogOpen}
+        onClose={() => setCommentDialogOpen(false)}
+        onSubmit={(comment) => {
+          if (!selectedTaskForComment) return;
+          addComment(selectedTaskForComment, comment);
+          console.log(`Comment for task ${selectedTaskForComment}: ${comment}`);
+          // Clear the selected task after submitting the comment
+          setSelectedTaskForComment(null);
+        }}
+      />
     </>
   );
 }
@@ -191,7 +241,7 @@ function CreateTask({
   taskID: string | null;
 }) {
   const { staffNames } = useStaff();
-  const [assigneeName, setAssigneeName] = useState< string>("");
+  const [assigneeName, setAssigneeName] = useState<string>("");
   const [title, setTitle] = useState(initialData ? initialData.title : "");
   const [description, setDescription] = useState(
     initialData ? initialData.description : ""
@@ -217,7 +267,7 @@ function CreateTask({
   };
 
   const options = useMemo(() => {
-    if (!staffNames) return []
+    if (!staffNames) return [];
     return staffNames.map((s) => {
       return s.name;
     });

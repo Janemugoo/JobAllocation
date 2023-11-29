@@ -1,14 +1,22 @@
-// src/services/commentsService.ts
-import { initFirestore } from "@/constants/firebase";
+// src/services/CommentService.ts
+import { Firestore, addDoc, collection } from "firebase/firestore";
 
-const store = initFirestore();
+export const CommentService = {
+  addComment: async (store: Firestore, taskID: string, comment: string) => {
+    try {
+      // Create the 'comments' collection 
+      const commentsCollection = collection(store, 'comments');
+      await addDoc(commentsCollection, {
+        taskID,
+        comment,
+        timestamp: new Date(),
+      });
 
-export const commentsService = {
-  addComment: async (taskId: string, text: string) => {
-    await store.collection("comments").add({
-      taskId,
-      text,
-      createdAt: new Date(),
-    });
+      console.log('Comment added successfully');
+    } catch (error) {
+      console.error('Error adding comment:', error);
+    }
   },
+
+  // You can add more functions for fetching, updating, or deleting comments here
 };

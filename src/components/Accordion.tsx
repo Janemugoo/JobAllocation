@@ -1,9 +1,19 @@
 import React, { useMemo } from "react";
-import { List, ListItem, ListItemText, Paper, Typography } from "@mui/material";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
 import { useJobs } from "@/hooks";
 
 const TableComponent = () => {
   const { assignedJobs } = useJobs();
+
   const rows = useMemo(() => {
     if (!assignedJobs?.docs.length) return [];
     return assignedJobs.docs.map((doc) => {
@@ -16,33 +26,40 @@ const TableComponent = () => {
       };
     });
   }, [assignedJobs]);
+
   return (
     <Paper>
-      <List>
-        {/* Table Header */}
-        <ListItem>
-          <ListItemText>
-            <Typography variant="subtitle1">Title</Typography>
-          </ListItemText>
-          <ListItemText>
-            <Typography variant="subtitle1">Description</Typography>
-          </ListItemText>
-          <ListItemText>
-            <Typography variant="subtitle1">StaffName</Typography>
-          </ListItemText>
-          {/* Add more columns as needed */}
-        </ListItem>
+      <TableContainer>
+        <Table>
+          {/* Table Header */}
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                <Typography variant="subtitle1">Title</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="subtitle1">Description</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="subtitle1">StaffName</Typography>
+              </TableCell>
+              {/* Add more columns as needed */}
+            </TableRow>
+          </TableHead>
 
-        {/* Table Rows */}
-        {rows.map((row) => (
-          <ListItem key={row.title}>
-            <ListItemText >{row.title}</ListItemText>
-            <ListItemText>{row.description}</ListItemText>
-            <ListItemText>{row.assigneeName}</ListItemText>
-            {/* Add more columns as needed */}
-          </ListItem>
-        ))}
-      </List>
+          {/* Table Rows */}
+          <TableBody>
+            {rows.map((row) => (
+              <TableRow key={row.title}>
+                <TableCell>{row.title}</TableCell>
+                <TableCell>{row.description}</TableCell>
+                <TableCell>{row.assigneeName}</TableCell>
+                {/* Add more columns as needed */}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Paper>
   );
 };

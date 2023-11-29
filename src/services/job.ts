@@ -68,6 +68,7 @@ export class Job {
   }
 
   getTasksComments(id: string) {
+    console.log(id)
     const tasksQuery=query(
       collection(this.store,"comments"),
       where("taskID","==",id)

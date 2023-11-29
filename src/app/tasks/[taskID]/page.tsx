@@ -38,12 +38,20 @@ export default function TaskDetails() {
     const getTask = async () => {
       if(loading){
         const detailsTask = await  task.getTasksById(taskID)
-        console.log (detailsTask)
         if(!detailsTask) return 
         setDetails(detailsTask)
         setLoading(false)
-        console.log(detailsTask)
       }
+    }
+
+    if(comments) {
+      setComments(() => {
+        return comments.docs.map((doc) =>{
+          const data = doc.data()
+    
+          return {comment: data.comment}
+        })
+      })
     }
 
     if(comments) {

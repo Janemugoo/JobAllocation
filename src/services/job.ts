@@ -76,7 +76,7 @@ export class Job {
   }
 
   async getTasksById(id: string) {
-    const docRef = doc(this.store, "cities", "SF");
+    const docRef = doc(this.store, "tasks", id);
     const docSnap = await getDoc(docRef);
 
     if(docSnap.exists()) return docSnap.data()

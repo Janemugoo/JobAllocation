@@ -5,7 +5,7 @@ import { Guard } from "@/components/Gaurd";
 import { ThemeProvider } from "@mui/material";
 import { theme } from "@/constants/theme";
 import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 export default function RootLayout({
   children,
 }: {

@@ -111,5 +111,5 @@ const Navlinks = [
   { name: "Admin", link: "/admin" },
   { name: "Dashboard", link: "/" },
   { name: "Tasks", link: "/tasks" },
-  { name: "Reports", link: "/report" },
+  
 ];

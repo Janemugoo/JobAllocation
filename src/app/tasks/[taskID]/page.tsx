@@ -18,15 +18,7 @@ export default function TaskDetails() {
   const {addComment} = useComment()
 
   const [comment, setComment] = useState('');
-  const [taskComments, setComments] = useState<{}[]>(() => {
-    console.log(comments)
-    if(!comments) return []
-    return comments.docs.map((doc) =>{
-      const data = doc.data()
-
-      return {comment: data.comment}
-    })
-  });
+  const [taskComments, setComments] = useState<{}[]>([]);
 
   const handleCommentChange = (e: any) => {
     setComment(e.target.value);
@@ -52,9 +44,29 @@ export default function TaskDetails() {
       }
     }
 
+    if(comments) {
+      setComments(() => {
+        return comments.docs.map((doc) =>{
+          const data = doc.data()
+    
+          return {comment: data.comment}
+        })
+      })
+    }
+
+    if(comments) {
+      setComments(() => {
+        return comments.docs.map((doc) =>{
+          const data = doc.data()
+    
+          return {comment: data.comment}
+        })
+      })
+    }
+
     getTask()
 
-  }, [loading, task, taskID])
+  }, [loading, task, taskID, comments])
 
 
   if(loading)return <>Loading</>

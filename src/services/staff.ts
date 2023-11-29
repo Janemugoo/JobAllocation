@@ -53,13 +53,18 @@ export class Staff extends Employee {
     console.log(validNumber);
     return `${code}-00${validNumber}`;
   }
+
   getAssignableStaff() {
     return query(collection(this.store, "staff"));
   }
+
+
   getStaffs() {
     const staffsQuery = query(collection(this.store, "staff"));
     return staffsQuery;
   }
+
+
   async updateStaffRow(
     docID: string,
     updatedFields: { staffName: string; staffDepartment: string }
@@ -67,6 +72,8 @@ export class Staff extends Employee {
     const staffDocRef = doc(this.store, "staff", docID);
     await updateDoc(staffDocRef, updatedFields);
   }
+
+  
   async deleteStaffRow(docID: string) {
     const staffDocRef = doc(this.store, "staff", docID);
     await deleteDoc(staffDocRef);

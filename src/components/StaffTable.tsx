@@ -49,7 +49,6 @@ export default function StaffTable() {
       };
     });
   }, [staffs]);
-  console.log(rows);
 
  const handleDownload = () => {
     const input = pdfRef.current;

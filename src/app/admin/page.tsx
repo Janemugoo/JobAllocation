@@ -22,6 +22,8 @@ export default function Page() {
   ) => {
     setSelectedTab(newValue);
   };
+
+  
   return (
     <div className="flex flex-col justify-center items-center gap-4 py-2 px-4">
       <Tabs
@@ -59,6 +61,9 @@ export default function Page() {
     </div>
   );
 }
+
+
+
 function TabsBody({selectedTab}:{selectedTab: AdminTabs}) {
   switch (selectedTab) {
     case AdminTabs.MANAGERS:

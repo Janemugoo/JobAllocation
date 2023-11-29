@@ -15,6 +15,8 @@ import { getAuth, signOut } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { app } from "@/constants/firebase";
 import { useRouter } from "next/navigation";
+import { use2Factor } from "@/app/auth/2factor/page";
+import { useEffect } from "react";
 
 export function NavBar() {
   return (
@@ -90,6 +92,7 @@ function UserData() {
 function NavGroup() {
   const router = useRouter();
 
+
   return (
     <Box className="border-b-2 border-solid mx-1 xl:mx-5 flex flex-col justify-center place-items-center md:place-items-stretch">
       <List className="m-1 lg:m-2 p-0">
@@ -109,5 +112,4 @@ const Navlinks = [
   { name: "Dashboard", link: "/" },
   { name: "Tasks", link: "/tasks" },
   { name: "Reports", link: "/report" },
-  
 ];

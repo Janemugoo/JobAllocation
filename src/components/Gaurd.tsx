@@ -21,9 +21,6 @@ export function Guard({ children }: GuardProps) {
       if(user === null) {
         router.push('/auth')
       }
-
-      if(!twoFactor) router.push('/auth/2factor')
-
       if(twoFactor){
         router.push('/')
       }

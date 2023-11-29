@@ -10,9 +10,11 @@ import {
   Typography,
 } from "@mui/material";
 import { useJobs } from "@/hooks";
+import { useRouter } from "next/navigation";
 
 const TableComponent = () => {
   const { assignedJobs } = useJobs();
+  const router = useRouter()
 
   const rows = useMemo(() => {
     if (!assignedJobs?.docs.length) return [];
@@ -50,7 +52,9 @@ const TableComponent = () => {
           {/* Table Rows */}
           <TableBody>
             {rows.map((row) => (
-              <TableRow key={row.title} >
+              <TableRow key={row.title} onClick={() => {
+                router.push(`/tasks/${row.docID}`)
+              }} className="cursor-pointer">
                 <TableCell>{row.title}</TableCell>
                 <TableCell>{row.description}</TableCell>
                 <TableCell>{row.assigneeName}</TableCell>

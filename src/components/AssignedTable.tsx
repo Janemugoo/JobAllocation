@@ -76,7 +76,7 @@ export default function AssignedTable() {
         </TableHead>
         <TableBody>
           {rows.map((task) => (
-            <TableRow key={task.docID} onClick={() => {
+            <TableRow className="cursor-pointer" key={task.docID} onClick={() => {
               router.push(`/tasks/${task.docID}`)
             }}>
               <TableCell>{task.title}</TableCell>

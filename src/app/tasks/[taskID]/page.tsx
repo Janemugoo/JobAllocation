@@ -1,7 +1,6 @@
 'use client'
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { initFirestore } from '@/constants/firebase';
 import { doc, DocumentData } from "firebase/firestore";
 import { useComment, useJobs } from "@/hooks";
 import { Button } from "@mui/material";

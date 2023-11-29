@@ -14,10 +14,11 @@ import React, { useMemo, useRef } from "react";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload"; // Material-UI Download icon
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { useRouter } from "next/navigation";
 
 export default function AssignedTable() {
   const pdfRef = useRef(null);
-  const tasks: any[] = []; // Define your tasks array here
+  const router = useRouter()
   const { assignedJobs } = useJobs();
   const rows = useMemo(() => {
     if (!assignedJobs?.docs.length) return [];
@@ -75,7 +76,9 @@ export default function AssignedTable() {
         </TableHead>
         <TableBody>
           {rows.map((task) => (
-            <TableRow key={task.docID}>
+            <TableRow key={task.docID} onClick={() => {
+              router.push(`/tasks/${task.docID}`)
+            }}>
               <TableCell>{task.title}</TableCell>
               <TableCell>{task.description}</TableCell>
               <TableCell>{task.assigneeName}</TableCell>

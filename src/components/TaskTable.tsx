@@ -30,6 +30,7 @@ import { AssignTask } from "./AssignTask";
 import jsPDF from "jspdf"; // Import the main jsPDF library
 import html2canvas from "html2canvas";
 import { useComment } from "@/hooks/comment";
+import { useRouter } from "next/navigation";
 
 export default function TaskTable() {
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
@@ -51,6 +52,7 @@ export default function TaskTable() {
   const pdfRef = useRef(null);
   const { staffNames } = useStaff();
   const { addComment } = useComment();
+  const router = useRouter()
   const rows = useMemo(() => {
     if (!tasks?.docs.length) return [];
 
@@ -147,7 +149,9 @@ export default function TaskTable() {
           </TableHead>
           <TableBody>
             {rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow key={row.id} onClick={() => {
+                  router.push(`/tasks/${row.docID}`)
+                }}>
                   <TableCell component="th" scope="row">
                     {row.title}
                   </TableCell>

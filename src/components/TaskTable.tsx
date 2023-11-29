@@ -30,15 +30,11 @@ import { AssignTask } from "./AssignTask";
 import jsPDF from "jspdf"; // Import the main jsPDF library
 import html2canvas from "html2canvas";
 import { useComment } from "@/hooks/comment";
-import Link from "next/link";
 
 export default function TaskTable() {
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
   const [assignTaskDialogOpen, setAssignTaskDialogOpen] = useState(false);
   const [commentDialogOpen, setCommentDialogOpen] = useState(false);
-
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selectedAssignee, setSelectedAssignee] = useState<null | string>(null);
   const [selectedTaskForComment, setSelectedTaskForComment] = useState<
     null | string
   >(null);

@@ -60,7 +60,7 @@ export default function Page() {
 };
 
 
-function use2Factor() {
+export function use2Factor() {
   const {managers} = useGetManagers()
   const {staffs} = useStaff()
 
@@ -74,20 +74,20 @@ function use2Factor() {
   }, [staffs])
 
   const optManager = useMemo(() => {
-    if(!staffs) return []
+    if(!managers) return []
 
-    return staffs.docs.map((doc) => {
+    return managers.docs.map((doc) => {
       const data = doc.data()
       return {...data}
     })
-  }, [staffs])
+  }, [managers])
 
   return {
     factor: (id: string) => {
       const foundStaff = optStaff.find((staff) => staff.managerID === id)
       if(foundStaff) return foundStaff
 
-      const foundManger = optStaff.find((staff) => staff.managerID === id)
+      const foundManger = optManager.find((staff) => staff.managerID === id)
       if(foundManger) return foundManger
     }
   }

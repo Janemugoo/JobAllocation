@@ -42,9 +42,10 @@ export function useJobs() {
     await task.create(title, description, assigneeName);
   };
 
- 
 
+ 
   return {
+    task,
     tasks,
     createTaskRow,
     deleteTaskRow,

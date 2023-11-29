@@ -151,8 +151,7 @@ export default function TaskTable() {
           </TableHead>
           <TableBody>
             {rows.map((row) => (
-              <Link key={row.id} href={`/tasks/${row.docID}`}>
-                <TableRow>
+                <TableRow key={row.id}>
                   <TableCell component="th" scope="row">
                     {row.title}
                   </TableCell>
@@ -208,7 +207,6 @@ export default function TaskTable() {
                     </IconButton>
                   </TableCell>
                 </TableRow>
-              </Link>
             ))}
           </TableBody>
         </Table>
@@ -227,6 +225,8 @@ export default function TaskTable() {
     </>
   );
 }
+
+
 function CreateTask({
   open,
   close,

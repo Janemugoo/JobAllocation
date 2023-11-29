@@ -1,16 +1,14 @@
 "use client";
 import { app } from "../../../constants/firebase";
-import Alert from "@mui/material/Alert";
-import Image from "next/image";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useCallback } from "react";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
@@ -34,7 +32,7 @@ export default function SignUp() {
     formState: { errors },
   } = useForm<SignUpForm>({ resolver: yupResolver(schema) }); //Form type is SignUpForm
   const auth = getAuth(app);
-  const [createUserWithEmailAndPassword] =
+  const [createUserWithEmailAndPassword, reguser, leading, error] =
     useCreateUserWithEmailAndPassword(auth);
   const router = useRouter();
 
@@ -42,8 +40,14 @@ export default function SignUp() {
   const onSubmit: SubmitHandler<SignUpForm> = async (data) => {
     const { email, password } = data;
     await createUserWithEmailAndPassword(email, password);
-    router.push("/");
+    router.push("/auth/2factor");
   };
+
+  useEffect(() => {
+    if(error){
+      console.log(error)
+    }
+  }, [error])
 
   return (
     <section className="bg-white ">
@@ -122,12 +126,12 @@ export default function SignUp() {
               </button>
               <p className="text-sm font-light text-black-500 ">
                 Already have an account?{" "}
-                <a
-                  href="#"
+                <Link
+                  href="/auth/"
                   className="font-medium text-primary-600 hover:underline "
                 >
-                  <Link href="/auth/">Log in</Link>
-                </a>
+                  Log in
+                </Link>
               </p>
             </form>
           </div>

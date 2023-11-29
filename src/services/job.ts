@@ -55,7 +55,14 @@ export class Job {
       where("assigneeName","==","")
     )
     return tasksQuery;
+  }
 
+  getTaskByUser() {
+    const tasksQuery=query(
+      collection(this.store,"tasks"),
+      where("assigneeName","==","")
+    )
+    return tasksQuery;
   }
   getAssignedJobs(){
     const tasksQuery=query(

@@ -6,7 +6,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth"; // enables 
 import { useForm, SubmitHandler } from "react-hook-form"; //enables me to reuse a piece of code (a hook)
 import { useCallback } from "react";
 import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth"; //reusable piece of code (hook from git)
+import { useAuthState, useSignInWithEmailAndPassword } from "react-firebase-hooks/auth"; //reusable piece of code (hook from git)
 import Link from "next/link";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -33,7 +33,8 @@ export default function Auth() {
   const router=  useRouter()
   // the custom hook encapsulates the firebase authentication logic
   const auth = getAuth(app);
-  const [signInWithEmailAndPassword, user, loading, error] =
+  const [user] = useAuthState(auth);
+  const [signInWithEmailAndPassword, loading, error] =
     useSignInWithEmailAndPassword(auth);
   const onSubmit: SubmitHandler<LoginForm> =async (data) => {
     await signInWithEmailAndPassword(data.email, data.password); 
@@ -41,7 +42,7 @@ export default function Auth() {
   }
     
     // form submission
-
+  if(user) router.push('/')
 
     
   return (

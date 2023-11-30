@@ -8,6 +8,7 @@ import Link from "next/link";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
+import { useAdmin } from "@/hooks/admin";
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
@@ -28,12 +29,14 @@ export default function Auth() {
     formState: { errors },
   } = useForm<LoginForm>({ resolver: yupResolver(schema) });
   const router = useRouter()
+  const {getAdmin} = useAdmin()
   // the custom hook encapsulates the firebase authentication logic
   const auth = getAuth(app);
   const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
   const onSubmit: SubmitHandler<LoginForm> = async (data) => {
     await signInWithEmailAndPassword(data.email, data.password); 
+    await getAdmin(data.email)
     router.push('/admin')
   }
     

@@ -1,5 +1,5 @@
 import { initFirestore } from "@/constants/firebase"
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, query, where } from "firebase/firestore";
 
 const store = initFirestore()
 
@@ -17,7 +17,13 @@ export const Admin = {
             throw new Error("")
         }
         
-    }   
+    }  ,
+    getAdmin: async (email: string) => {
+        const docRef = doc(store, "admin", email);
+        const docSnap = await getDoc(docRef);
+    
+        if(docSnap.exists()) return docSnap.data()
+    } 
 }
 
 

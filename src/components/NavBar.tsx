@@ -111,6 +111,7 @@ function NavGroup() {
 const Navlinks = [
   { name: "Dashboard", link: "/" },
   { name: "Tasks", link: "/tasks" },
+  { name: "Manager", link: "/manager" },
 ];
 
 

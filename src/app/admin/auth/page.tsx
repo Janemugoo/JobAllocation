@@ -36,8 +36,9 @@ export default function Auth() {
     useSignInWithEmailAndPassword(auth);
   const onSubmit: SubmitHandler<LoginForm> = async (data) => {
     await signInWithEmailAndPassword(data.email, data.password); 
-    await getAdmin(data.email)
-    router.push('/admin')
+    const user = await getAdmin(data.email)
+    if(user)
+      router.push('/admin')
   }
     
   return (

@@ -15,8 +15,6 @@ import { getAuth, signOut } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { app } from "@/constants/firebase";
 import { useRouter } from "next/navigation";
-import { use2Factor } from "@/app/auth/2factor/page";
-import { useEffect } from "react";
 
 export function NavBar() {
   return (
@@ -108,8 +106,6 @@ function NavGroup() {
   );
 }
 const Navlinks = [
-  { name: "Admin", link: "/admin" },
   { name: "Dashboard", link: "/" },
   { name: "Tasks", link: "/tasks" },
-  { name: "Reports", link: "/report" },
 ];

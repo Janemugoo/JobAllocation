@@ -6,15 +6,13 @@ import { getAuth } from "firebase/auth";
 import { app } from "@/constants/firebase";
 
 interface GuardProps {
-  children: JSX.Element;
+  children: ReactNode;
 }
 export function Guard({ children }: GuardProps) {
   const auth = getAuth(app);
   const router = useRouter(); //helps us to navigate from one page to another
 
   const [user, loading, error] = useIdToken(auth); //updates the user activities
-
-
 
   useEffect(() => {
     const twoFactor =  localStorage.getItem('is2factor')

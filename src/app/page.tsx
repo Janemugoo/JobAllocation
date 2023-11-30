@@ -1,16 +1,8 @@
-"use client";
 // CombineApp.tsx
-import React from "react";
-import "./globals.css";
-import KanbanBoard from "@/components/KanbanBoard";
-import { AppLayout } from "@/components/AppLayout";
+import { redirect } from "next/navigation";
 
 function CombineApp() {
-  return (
-    <AppLayout>
-      <KanbanBoard />
-    </AppLayout>
-  );
+  return redirect('/dashboard')
 }
 
 export default CombineApp;

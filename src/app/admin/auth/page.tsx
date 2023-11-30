@@ -1,10 +1,7 @@
 "use client";
-import { app } from "../../constants/firebase";
-import Alert from "@mui/material/Alert"; //imports material-UI components
-import Image from "next/image";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth"; // enables me to import firebase related imports from firebase Auth
+import { app } from "../../../constants/firebase";
+import { getAuth } from "firebase/auth"; // enables me to import firebase related imports from firebase Auth
 import { useForm, SubmitHandler } from "react-hook-form"; //enables me to reuse a piece of code (a hook)
-import { useCallback } from "react";
 import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth"; //reusable piece of code (hook from git)
 import Link from "next/link";
@@ -30,19 +27,15 @@ export default function Auth() {
     watch,
     formState: { errors },
   } = useForm<LoginForm>({ resolver: yupResolver(schema) });
-  const router=  useRouter()
+  const router = useRouter()
   // the custom hook encapsulates the firebase authentication logic
   const auth = getAuth(app);
   const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
-  const onSubmit: SubmitHandler<LoginForm> =async (data) => {
+  const onSubmit: SubmitHandler<LoginForm> = async (data) => {
     await signInWithEmailAndPassword(data.email, data.password); 
-    router.push('/auth/2factor')
+    router.push('/admin')
   }
-    
-    // form submission
-
-
     
   return (
     //css code for the login page

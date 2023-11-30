@@ -6,7 +6,9 @@ import { Button } from "@mui/material";
 import React, { useState } from "react";
 import { Tabs, Tab } from "@mui/material";
 import AssignedTable from "@/components/AssignedTable";
-import { Guard } from "@/components/Gaurd";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { getAuth, signOut } from "firebase/auth";
+import { app } from "@/constants/firebase";
 
 enum AdminTabs {
   MANAGERS = "managers",
@@ -16,6 +18,7 @@ enum AdminTabs {
 }
 
 export default function Page() {
+  const auth = getAuth(app);
   const [selectedTab, setSelectedTab] = useState(() => AdminTabs.MANAGERS);
   const handleTabChange = (
     event: any,
@@ -24,7 +27,12 @@ export default function Page() {
     setSelectedTab(newValue);
   };
 
-  
+  const [user] = useAuthState(auth);
+
+  const logout = () => {
+    signOut(auth);
+  };
+
   return (
     <div className="flex flex-col justify-center items-center gap-4 py-2 px-4">
       <Tabs
@@ -35,37 +43,41 @@ export default function Page() {
         className="rounded-lg overflow-hidden border border-black-300"
       >
         <Tab
-        value={AdminTabs.MANAGERS}
+          value={AdminTabs.MANAGERS}
           label="Managers"
           className="py-2 px-6 hover:bg-gray-300  hover:text-black transition duration-300"
         />
         <Tab
-         value={AdminTabs.STAFFS}
+          value={AdminTabs.STAFFS}
           label="Staffs"
           className="py-2 px-6 hover:bg-gray-300  hover:text-black transition duration-300"
         />
         <Tab
-         value={AdminTabs.UNASSIGNEDTASKS}
+          value={AdminTabs.UNASSIGNEDTASKS}
           label="Unassigned Tasks"
           className="py-2 px-6 hover:bg-gray-300  hover:text-black transition duration-300"
         />
         <Tab
-         value={AdminTabs.ASSIGNEDTASKS}
+          value={AdminTabs.ASSIGNEDTASKS}
           label="Assigned Tasks"
           className="py-2 px-6 hover:bg-gray-300  hover:text-black transition duration-300"
         />
       </Tabs>
 
-     <TabsBody 
-     selectedTab={selectedTab}
-     />
+      <TabsBody selectedTab={selectedTab} />
+
+      <Button
+        onClick={() => {
+          logout();
+        }}
+      >
+        Log Out
+      </Button>
     </div>
   );
 }
 
-
-
-function TabsBody({selectedTab}:{selectedTab: AdminTabs}) {
+function TabsBody({ selectedTab }: { selectedTab: AdminTabs }) {
   switch (selectedTab) {
     case AdminTabs.MANAGERS:
       return <ManagerTable />;

@@ -37,7 +37,8 @@ export default function Page() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center gap-4 py-2 px-4">
+    <div className="flex flex-col justify-center items-center gap-4 py-2 px-4 bg-white">
+      <div className="flex justify-center items-center gap-4 py-2 px-4">
       <Tabs
         value={selectedTab}
         onChange={handleTabChange}
@@ -66,16 +67,11 @@ export default function Page() {
           className="py-2 px-6 hover:bg-gray-300  hover:text-black transition duration-300"
         />
       </Tabs>
-
+      <Button onClick={() => logout()}>Log Out</Button>
+      </div>
+      
+      
       <TabsBody selectedTab={selectedTab} />
-
-      <Button
-        onClick={() => {
-          logout();
-        }}
-      >
-        Log Out
-      </Button>
     </div>
   );
 }

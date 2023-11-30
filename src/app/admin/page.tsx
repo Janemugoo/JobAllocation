@@ -6,6 +6,7 @@ import { Button } from "@mui/material";
 import React, { useState } from "react";
 import { Tabs, Tab } from "@mui/material";
 import AssignedTable from "@/components/AssignedTable";
+import { Guard } from "@/components/Gaurd";
 
 enum AdminTabs {
   MANAGERS = "managers",
@@ -25,6 +26,7 @@ export default function Page() {
 
   
   return (
+    <Guard>
     <div className="flex flex-col justify-center items-center gap-4 py-2 px-4">
       <Tabs
         value={selectedTab}
@@ -59,6 +61,7 @@ export default function Page() {
      selectedTab={selectedTab}
      />
     </div>
+    </Guard>
   );
 }
 

@@ -26,7 +26,6 @@ export default function Page() {
 
   
   return (
-    <Guard>
     <div className="flex flex-col justify-center items-center gap-4 py-2 px-4">
       <Tabs
         value={selectedTab}
@@ -61,7 +60,6 @@ export default function Page() {
      selectedTab={selectedTab}
      />
     </div>
-    </Guard>
   );
 }
 

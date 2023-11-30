@@ -15,13 +15,10 @@ export function Guard({ children }: GuardProps) {
   const [user, loading, error] = useIdToken(auth); //updates the user activities
 
   useEffect(() => {
-    const twoFactor =  localStorage.getItem('is2factor')
       if(user === null) {
         router.push('/auth')
       }
-      if(twoFactor){
-        router.push('/')
-      }
+      
   }, [loading, router, user])
 
 

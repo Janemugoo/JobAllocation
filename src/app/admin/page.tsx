@@ -33,8 +33,10 @@ export default function Page() {
 
   const logout = () => {
     signOut(auth);
-    router.push('/auth')
+    router.push('/admin/auth')
   };
+
+  if(!user) router.push('/admin/auth')
 
   return (
     <div className="flex flex-col justify-center items-center gap-4 py-2 px-4 bg-white">

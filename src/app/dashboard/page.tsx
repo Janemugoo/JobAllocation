@@ -6,13 +6,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { Guard } from "@/components/Gaurd";
 
 function CombineApp() {
-  return (
-    <Guard>
-      <AppLayout>
-        <KanbanBoard />
-      </AppLayout>
-    </Guard>
-  );
+  return <KanbanBoard />;
 }
 
 export default CombineApp;

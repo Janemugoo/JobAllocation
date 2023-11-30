@@ -15,8 +15,11 @@ import { getAuth, signOut } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { app } from "@/constants/firebase";
 import { useRouter } from "next/navigation";
+import  secureLocalStorage  from  "react-secure-storage";
 
 export function NavBar() {
+
+
   return (
     <>
       <Box className="h-full rounded-sm text-xs md:text-md border-transparent transition-shadow shadow-lg flex flex-col justify-between z-50 overflow-hidden">
@@ -28,7 +31,6 @@ export function NavBar() {
               color: "primary.contrastText",
             }}
           >
-            {" "}
             <AssignmentIndOutlinedIcon className="self-center mx-3 h-6 w-6 sm:h-9 inline-block" />
             <Typography
               variant="h6"
@@ -88,7 +90,7 @@ function UserData() {
 
 function NavGroup() {
   const router = useRouter();
-
+  const {current} = useCurrentUser()
 
   return (
     <Box className="border-b-2 border-solid mx-1 xl:mx-5 flex flex-col justify-center place-items-center md:place-items-stretch">
@@ -104,7 +106,20 @@ function NavGroup() {
     </Box>
   );
 }
+
+
 const Navlinks = [
   { name: "Dashboard", link: "/" },
   { name: "Tasks", link: "/tasks" },
 ];
+
+
+function  useCurrentUser() {
+  const current = secureLocalStorage.getItem('currentUser')
+
+  console.log(current)
+
+  return {
+    current
+  }
+}

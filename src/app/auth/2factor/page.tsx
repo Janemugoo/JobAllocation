@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import Router from 'next/router';
 import React, { useMemo, useState } from 'react';
 
+import  secureLocalStorage  from  "react-secure-storage";
+
 export default function Page() {
   const router = useRouter()
   const [staffId, setStaffId] = useState('');
@@ -85,10 +87,16 @@ export function use2Factor() {
   return {
     factor: (id: string) => {
       const foundStaff = optStaff.find((staff) => staff.managerID === id)
-      if(foundStaff) return foundStaff
+      if(foundStaff)  {
+        secureLocalStorage.setItem('currentUser', JSON.stringify(foundStaff))
+       return foundStaff
+      }
 
       const foundManger = optManager.find((staff) => staff.managerID === id)
-      if(foundManger) return foundManger
+      if(foundManger)  {
+        secureLocalStorage.setItem('currentUser', JSON.stringify(foundManger))
+        return foundManger
+       }
     }
   }
 }

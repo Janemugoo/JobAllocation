@@ -9,6 +9,7 @@ import AssignedTable from "@/components/AssignedTable";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth, signOut } from "firebase/auth";
 import { app } from "@/constants/firebase";
+import { useRouter } from "next/navigation";
 
 enum AdminTabs {
   MANAGERS = "managers",
@@ -26,11 +27,13 @@ export default function Page() {
   ) => {
     setSelectedTab(newValue);
   };
+  const router = useRouter()
 
   const [user] = useAuthState(auth);
 
   const logout = () => {
     signOut(auth);
+    router.push('/auth')
   };
 
   return (

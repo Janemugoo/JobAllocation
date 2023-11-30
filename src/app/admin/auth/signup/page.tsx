@@ -2,7 +2,7 @@
 import { app } from "../../../../constants/firebase";
 import { getAuth } from "firebase/auth";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { useAuthState, useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -37,7 +37,7 @@ export default function SignUp() {
     useCreateUserWithEmailAndPassword(auth);
   const router = useRouter();
   const {addAdmin} = useAdmin()
-
+  const [user] = useAuthState(auth);
   //custom hook
   const onSubmit: SubmitHandler<SignUpForm> = async (data) => {
     const { email, password } = data;
@@ -51,6 +51,8 @@ export default function SignUp() {
       console.log(error)
     }
   }, [error])
+
+  if(user) router.push('/admin')
 
   return (
     <section className="bg-white ">

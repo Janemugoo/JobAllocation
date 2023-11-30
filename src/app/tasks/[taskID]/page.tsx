@@ -90,7 +90,7 @@ export default function TaskDetails() {
       </div>
 
       <div className="mb-4">
-        <h2 className="text-lg font-semibold mb-2">Task Description</h2>
+        <h2 className="text-lg font-semibold mb-2">Assigned Staff</h2>
         <p className="text-gray-700">{details.assigneeName}</p>
       </div>
 

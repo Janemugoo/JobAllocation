@@ -14,7 +14,7 @@ export default function RootLayout({
   
   return (
     <html lang="en">
-      <body className="h-screen w-full text-sm">
+      <body className="h-screen w-full text-sm bg-white">
         <ThemeProvider theme={theme}>
             <>{children}</>
         </ThemeProvider>

@@ -44,7 +44,7 @@ export default function Page() {
       <Tabs
         value={selectedTab}
         onChange={handleTabChange}
-        textColor="white"
+        textColor="primary"
         indicatorColor="primary"
         className="rounded-lg overflow-hidden border border-black-300"
       >

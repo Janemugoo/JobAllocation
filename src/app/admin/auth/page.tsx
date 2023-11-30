@@ -3,7 +3,7 @@ import { app } from "../../../constants/firebase";
 import { getAuth } from "firebase/auth"; // enables me to import firebase related imports from firebase Auth
 import { useForm, SubmitHandler } from "react-hook-form"; //enables me to reuse a piece of code (a hook)
 import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth"; //reusable piece of code (hook from git)
+import { useAuthState, useSignInWithEmailAndPassword } from "react-firebase-hooks/auth"; //reusable piece of code (hook from git)
 import Link from "next/link";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -30,9 +30,11 @@ export default function Auth() {
   } = useForm<LoginForm>({ resolver: yupResolver(schema) });
   const router = useRouter()
   const {getAdmin} = useAdmin()
+
   // the custom hook encapsulates the firebase authentication logic
   const auth = getAuth(app);
-  const [signInWithEmailAndPassword, user, loading, error] =
+  const [user] = useAuthState(auth);
+  const [signInWithEmailAndPassword, loading] =
     useSignInWithEmailAndPassword(auth);
   const onSubmit: SubmitHandler<LoginForm> = async (data) => {
     await signInWithEmailAndPassword(data.email, data.password); 
@@ -40,6 +42,8 @@ export default function Auth() {
     if(user)
       router.push('/admin')
   }
+
+  if(user) router.push('/admin')
     
   return (
     //css code for the login page

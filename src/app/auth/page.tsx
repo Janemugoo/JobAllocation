@@ -41,10 +41,6 @@ export default function Auth() {
     router.push('/auth/2factor')
   }
     
-    // form submission
-  if(user) router.push('/')
-
-    
   return (
     //css code for the login page
     <section className="bg-gray-50 ">

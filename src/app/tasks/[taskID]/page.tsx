@@ -20,16 +20,19 @@ export default function TaskDetails() {
   const [comment, setComment] = useState('');
   const [taskComments, setComments] = useState<{}[]>([]);
 
+  
+
   const handleCommentChange = (e: any) => {
     setComment(e.target.value);
 
-    addComment(taskID, comment)
   };
 
   const handleAddComment = () => {
     if (comment.trim() !== '') {
       setComments([...taskComments, {comment}]);
       setComment('');
+      addComment(taskID, comment)
+
     }
   };
 
@@ -122,3 +125,21 @@ export default function TaskDetails() {
     </div>
   );
 }
+type DebounceFunction = <F extends (...args: any[]) => any>(
+  func: F,
+  delay: number
+) => (...args: Parameters<F>) => void;
+
+const debounce: DebounceFunction = (func, delay) => {
+  let timeoutId: NodeJS.Timeout;
+
+  return (...args) => {
+    clearTimeout(timeoutId);
+
+    timeoutId = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+};
+
+
